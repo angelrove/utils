@@ -1,0 +1,13 @@
+{
+    "require": {
+      "components/jquery": "~2.2"
+    },
+
+    "autoload": {
+      "psr-0": {
+         "angelrove\\utils\\":         "vendor/angelrove/utils/src/",
+         "angelrove\\utils\\images\\": "vendor/angelrove/utils/src/Images"
+      }
+    }
+
+}
