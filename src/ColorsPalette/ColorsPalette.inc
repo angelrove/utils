@@ -1,9 +1,9 @@
 <?
-namespace angelrove\utils;
-
 /**
  *
  */
+
+namespace angelrove\utils;
 
 use angelrove\utils\Vendor;
 use SoapBox\Csscolor\Csscolor;
@@ -17,7 +17,7 @@ class ColorsPalette extends Csscolor
   function __construct($baseColor)
   {
     if(!$baseColor) {
-       $baseColor = 'ffffff';
+       $baseColor = 'f8f8f8';
     }
     parent::__construct($baseColor);
   }
