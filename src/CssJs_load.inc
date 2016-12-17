@@ -13,7 +13,7 @@ class CssJs_load
   static private $async  = array(
      'js'  => 'async',
      'css' => 'media="none" onload="if(media!=\'all\')media=\'all\'"'
-    );
+  );
 
   static private $doc_root  = '.';
   static private $dir_cache = '_cache';
@@ -22,7 +22,7 @@ class CssJs_load
   static private $url_cache  = '';
 
   //---
-  static private $default_combined = false;
+  static private $default_combined = true;
   static private $set_minify = false;
 
   //---
@@ -39,9 +39,9 @@ class CssJs_load
   static private $list_css_combined = array();
   static private $list_js_combined  = array();
 
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   // CONF
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   public static function _init($doc_root)
   {
      self::$doc_root = $doc_root;
@@ -50,26 +50,27 @@ class CssJs_load
      self::$path_cache = self::$doc_root.'/'.self::$dir_cache.'/';
      self::$url_cache  = '/'.self::$dir_cache.'/';
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   public static function isProd($isProd=false)
   {
-     self::$default_combined = $isProd;
+     // self::$default_combined = $isProd;
      self::$set_minify = $isProd;
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   // SETERS
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   public static function set($file, $async=false)
   {
      // Combined -------
      if(self::$default_combined && !self::is_http($file))
      {
-        if(!file_exists(self::$doc_root.$file)) {
-           return;
+        if(!file_exists($file)) {
+           trigger_error("File not found: $file", E_USER_NOTICE);
+           return false;
         }
 
         if(self::get_type($file) == 'js') {
-           self::$list_js_combined[$file] = $file;
+           self::$list_js_combined[$file]  = $file;
         } else {
            self::$list_css_combined[$file] = $file;
         }
@@ -85,32 +86,36 @@ class CssJs_load
        }
      }
   }
-  //----------------------------------------------------
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
+  //---------------------------------------------------------------------
   public static function set_js($file, $async=false)
   {
      self::$async_files[$file] = $async;
      self::$list_js[$file] = $file;
   }
-  //------------------------------------
-  public static function set_css($file, $async=false)
+  //---------------------------------------------------------------------
+  public static function set_css($file, $async=false, $combined=false)
   {
      self::$async_files[$file] = $async;
 
-     if(self::is_http($file)) {
-        self::$list_css_http[$file] = $file;
+     if($combined) {
+       self::$list_css_combined[$file] = $file;
      }
      else {
-        self::$list_css[$file] = $file;
+       if(self::is_http($file)) {
+          self::$list_css_http[$file] = $file;
+       } else {
+          self::$list_css[$file] = $file;
+       }
      }
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   public static function set_less($file, $async=false)
   {
      self::$async_files[$file] = $async;
      self::$list_less[$file] = $file;
   }
-  //------------------------------------
+  //---------------------------------------------------------------------
   // Dependiendo de si usa o no clave, sera combined o no
   public static function set_script($script, $key='')
   {
@@ -120,9 +125,9 @@ class CssJs_load
       self::$list_scripts[] = $script;
     }
   }
-  //------------------------------------
+  //---------------------------------------------------------------------
   // GETERS
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   public static function get_css($version='')
   {
     self::get_css_js_files(self::$list_css_http, 'css');
@@ -130,16 +135,16 @@ class CssJs_load
     self::get_css_js_files(self::$list_css, 'css');
     self::get_css_js_files(self::$list_less, 'less');
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   public static function get_js($version='')
   {
     self::get_css_js_files(self::$list_js, 'js');
     self::get_css_js_combined('js', $version);
     self::get_js_scripts();
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   // PRIVATE
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   private static function get_js_scripts()
   {
      $strScripts = self::read_scripts(false);
@@ -148,7 +153,7 @@ class CssJs_load
         echo PHP_EOL .'<script type="text/javascript">'.PHP_EOL.$strScripts.'</script>'.PHP_EOL;
      }
   }
-  //--------------------------------------
+  //---------------------------------------------------------------------
   private static function get_css_js_files($listFiles, $ext)
   {
     $strCssJs = '';
@@ -171,7 +176,7 @@ class CssJs_load
 
     echo $strCssJs;
   }
-  //--------------------------------------
+  //---------------------------------------------------------------------
   private static function get_css_js_combined($ext, $version='1', $obfuscate=false)
   {
     //------------------
@@ -234,9 +239,9 @@ class CssJs_load
        echo '<link type="text/css" href="'.$cache_file_url.'" rel="stylesheet/less">'.PHP_EOL ;
     }
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   // READ CONTENT
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   private static function read_files_combined($listFiles, $ext)
   {
     // Header ---------
@@ -245,18 +250,21 @@ class CssJs_load
             ' *'.PHP_EOL.
             ' * url: '.$_SERVER['REQUEST_URI'].PHP_EOL.
             ' * files:'.PHP_EOL.
-            '  '.implode(PHP_EOL, $listFiles).PHP_EOL.
+            ' '.implode(PHP_EOL.' ', $listFiles).PHP_EOL.
             ' */'.PHP_EOL.PHP_EOL;
 
     if(self::$set_minify) {
-       $head = '/* lib: angelrove\utils\CssJs_load - url: '.$_SERVER['REQUEST_URI'].PHP_EOL;
+       $head = '/* lib: angelrove\utils\CssJs_load - url: '.$_SERVER['REQUEST_URI'].' */'.PHP_EOL;
     }
 
     // List files -----
     $strCombined = '';
     foreach($listFiles as $file)
     {
-       $strFile = file_get_contents(self::$doc_root.$file);
+       // $strFile = file_get_contents($file);
+       ob_start();
+       include($file);
+       $strFile = ob_get_clean();
 
        // Minify
        if(self::$set_minify) {
@@ -265,13 +273,16 @@ class CssJs_load
           }
        }
 
-       $strCombined .= '/* '.$file.' */ '.$strFile.PHP_EOL;
+       //---
+       $parts = explode('/', $file, 3);
+       $strCombined .= PHP_EOL.'/**-- '.$parts[2].' --**/'.PHP_EOL;
+       $strCombined .= $strFile.PHP_EOL;
     }
     //-----------------
 
     return $head.$strCombined;
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   private static function read_scripts($combined=false)
   {
      $strScripts = '';
@@ -301,9 +312,9 @@ class CssJs_load
      }
      return '';
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   // UTILS
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   private static function get_type($file)
   {
      $end_3 = substr($file, -3);
@@ -318,7 +329,7 @@ class CssJs_load
         return 'css';
      }
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   private static function is_http($file)
   {
      if(strpos($file, '//') === false) {
@@ -328,7 +339,7 @@ class CssJs_load
         return true;
      }
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
   private static function get_seccion()
   {
      // Seccion ------
@@ -342,8 +353,7 @@ class CssJs_load
 
      return $seccion;
   }
-  //----------------------------------------------------
-  //----------------------------------
+  //---------------------------------------------------------------------
   private static function minify_css($buffer)
   {
      /* remove comments */
@@ -354,7 +364,7 @@ class CssJs_load
 
      return $buffer;
   }
-  //----------------------------------
+  //---------------------------------------------------------------------
   private static function minify_js($buffer)
   {
      /* remove comments */
@@ -368,5 +378,5 @@ class CssJs_load
 
      return $buffer;
   }
-  //----------------------------------------------------
+  //---------------------------------------------------------------------
 }

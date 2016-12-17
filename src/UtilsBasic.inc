@@ -234,12 +234,14 @@ Class UtilsBasic
   static function get_htm_img($datos, $type='', $alt='', $class='', $op_nofoto=false, $link='')
   {
      // echo "=> UtilsBasic::get_htm_img($type, $alt, $class, $op_nofoto)";
+     // print_r2($datos);
+
      $img = '';
 
      //-------
      $alt = ($alt)? htmlentities($alt) : $datos['name'];
 
-     //-------
+     //---------------
      // no foto
      if(!$datos) {
         if($op_nofoto) {
@@ -250,7 +252,7 @@ Class UtilsBasic
         }
         return $img;
      }
-     //-------
+     //---------------
      // lightbox
      if($type == 'lightbox') {
         $img =
@@ -261,7 +263,7 @@ Class UtilsBasic
                   'alt="'.$alt.'">'.
           '</a>';
      }
-     //-------
+     //---------------
      // basic image
      else {
         $img = '<img class="htm_img img-responsive '.$class.'" src="'.$datos['ruta_completa'].'" alt="'.$alt.'">';

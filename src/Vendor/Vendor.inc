@@ -34,6 +34,15 @@ class Vendor
       return self::$paths[$key];
    }
    //-------------------------------------------------
+   static function get_url($key)
+   {
+      $url = self::get_path($key);
+      $url = str_replace(PATH_VENDOR, '', $url);
+      $url = URL_VENDOR.$url;
+
+      return $url;
+   }
+   //-------------------------------------------------
    static function show_paths()
    {
       print_r2(self::$paths);
@@ -54,15 +63,11 @@ class Vendor
 
       // PHP -------
       if($ext == '.php' || $ext == '.inc') {
-         include_once(PATH_VENDOR.$file_path);
+         include_once($file_path);
       }
       // js / css ---
       else {
-         if(strpos($file_path, '//') === false) {
-            CssJs_load::set(URL_VENDOR.$file_path);
-         } else {
-            CssJs_load::set($file_path);
-         }
+         CssJs_load::set($file_path);
       }
 
    }

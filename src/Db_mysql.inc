@@ -150,6 +150,23 @@ class Db_mysql
 
     return $listRows;
   }
+  //----------
+  static function getListObject($query) {
+    $listRows = array();
+
+    $result = self::query($query);
+    if(!$result) {
+       return false;
+    }
+
+    while($row = mysqli_fetch_object($result)) {
+       $listRows[$row->id] = $row;
+    }
+    mysqli_free_result($result);
+
+    return $listRows;
+  }
+  //----------
   static function getListOneField($query, $noId=false)
   {
     $listRows = array();
@@ -183,18 +200,6 @@ class Db_mysql
 
     while($row = mysqli_fetch_assoc($result)) {
        $listRows[] = $row;
-    }
-    mysqli_free_result($result);
-
-    return $listRows;
-  }
-  //----------
-  static function getListObject($query) {
-    $listRows = array();
-
-    $result = self::query($query);
-    while($row = mysqli_fetch_object($result)) {
-       $listRows[$row->id] = $row;
     }
     mysqli_free_result($result);
 

@@ -25,7 +25,7 @@ class MyErrorHandler
       self::$file_pref = $file_pref;
 
       //-------------
-      ini_set('error_log',      self::$PATH_LOGS.'/error-'.date('d').'.log');
+      ini_set('error_log',      self::$PATH_LOGS.'/'.self::$file_pref.'php-error.log');
       ini_set('display_errors', self::$display_errors);
       set_error_handler("angelrove\utils\MyErrorHandler::handler");
   }
@@ -72,11 +72,12 @@ class MyErrorHandler
      $paramUrl    = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
      // $param_agent = (isset($_SERVER['HTTP_USER_AGENT']))? '['.$_SERVER['HTTP_USER_AGENT'].']' : '[no USER_AGENT]';
 
-     $msg = "[".date('h:i:s')."] [$REMOTE_ADDR] [$paramUrl] $errstr in file $errfile line $errline".PHP_EOL;
+     $msg = "[".date('d-M h:i:s')."] [$REMOTE_ADDR] [$paramUrl] $errstr in file $errfile line $errline".PHP_EOL;
 
      //-------
-     $file_name = self::$PATH_LOGS.'/'.
-                  'handler-'.self::$file_pref.$id_file.'-'.date('d').'.log';
+     $file_name = self::$PATH_LOGS.'/';
+     // $file_name .= 'handler-'.self::$file_pref.$id_file.'-'.date('d').'.log';
+     $file_name .= self::$file_pref.$id_file.'.log';
 
      //-------
      file_put_contents($file_name, $msg, FILE_APPEND);
