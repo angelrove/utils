@@ -69,11 +69,15 @@ class SendMail
 //-- Headers ------------------------
 ".htmlentities(implode("\r\n", $this->headers))."
 //-----------------------------------
-
-To:      '$this->mailto'
-Subject: '$this->subject'
 ");
-        echo '<div style="background:#eee;border:1px solid #bbb;padding:10px;margin:10px;">'.$this->body."</div";
+
+        print_r2("
+          From:    '".htmlentities($this->from)."'
+          To:      '$this->mailto'
+          Subject: '$this->subject'
+        ");
+
+        print_r2($this->body);
         return;
         // exit;
       }

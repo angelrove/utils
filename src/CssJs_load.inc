@@ -15,9 +15,6 @@ class CssJs_load
      'css' => 'media="none" onload="if(media!=\'all\')media=\'all\'"'
   );
 
-  static private $doc_root  = '.';
-  static private $dir_cache = '_cache';
-
   static private $path_cache = '';
   static private $url_cache  = '';
 
@@ -30,6 +27,7 @@ class CssJs_load
 
   static private $list_css      = array();
   static private $list_css_http = array();
+  static private $list_css_blocks = array();
 
   static private $list_less     = array();
 
@@ -42,13 +40,10 @@ class CssJs_load
   //---------------------------------------------------------------------
   // CONF
   //---------------------------------------------------------------------
-  public static function _init($doc_root)
+  public static function _init($path_cache, $url_cache)
   {
-     self::$doc_root = $doc_root;
-
-     // Cache dir ----
-     self::$path_cache = self::$doc_root.'/'.self::$dir_cache.'/';
-     self::$url_cache  = '/'.self::$dir_cache.'/';
+     self::$path_cache = $path_cache;
+     self::$url_cache  = $url_cache;
   }
   //---------------------------------------------------------------------
   public static function isProd($isProd=false)
@@ -57,7 +52,7 @@ class CssJs_load
      self::$set_minify = $isProd;
   }
   //---------------------------------------------------------------------
-  // SETERS
+  // SETTERS
   //---------------------------------------------------------------------
   public static function set($file, $async=false)
   {
@@ -99,14 +94,14 @@ class CssJs_load
      self::$async_files[$file] = $async;
 
      if($combined) {
-       self::$list_css_combined[$file] = $file;
+        self::$list_css_combined[$file] = $file;
      }
      else {
-       if(self::is_http($file)) {
-          self::$list_css_http[$file] = $file;
-       } else {
-          self::$list_css[$file] = $file;
-       }
+        if(self::is_http($file)) {
+           self::$list_css_http[$file] = $file;
+        } else {
+           self::$list_css[$file] = $file;
+        }
      }
   }
   //---------------------------------------------------------------------
@@ -120,15 +115,24 @@ class CssJs_load
   public static function set_script($script, $key='')
   {
     if($key) {
-      self::$list_scripts[$key] = $script;
+       self::$list_scripts[$key] = $script;
     } else {
-      self::$list_scripts[] = $script;
+       self::$list_scripts[] = $script;
     }
   }
   //---------------------------------------------------------------------
-  // GETERS
+  public static function set_css_block($css, $key='')
+  {
+    if($key) {
+       self::$list_css_blocks[$key] = $css;
+    } else {
+       self::$list_css_blocks[] = $css;
+    }
+  }
   //---------------------------------------------------------------------
-  public static function get_css($version='')
+  // GETTERS
+  //---------------------------------------------------------------------
+  public static function get_css($version='1')
   {
     self::get_css_js_files(self::$list_css_http, 'css');
     self::get_css_js_combined('css', $version);
@@ -136,7 +140,7 @@ class CssJs_load
     self::get_css_js_files(self::$list_less, 'less');
   }
   //---------------------------------------------------------------------
-  public static function get_js($version='')
+  public static function get_js($version='1')
   {
     self::get_css_js_files(self::$list_js, 'js');
     self::get_css_js_combined('js', $version);
@@ -147,8 +151,7 @@ class CssJs_load
   //---------------------------------------------------------------------
   private static function get_js_scripts()
   {
-     $strScripts = self::read_scripts(false);
-
+     $strScripts = self::read_scripts(self::$list_scripts, false);
      if($strScripts) {
         echo PHP_EOL .'<script type="text/javascript">'.PHP_EOL.$strScripts.'</script>'.PHP_EOL;
      }
@@ -177,9 +180,11 @@ class CssJs_load
     echo $strCssJs;
   }
   //---------------------------------------------------------------------
+  // El nombre se genera con el md5 de la cadena resultante de concatenar todos los nombres de archivos y claves de scripts.
+  // De esta forma se regenera automáticamente al añadir o eliminar un archivo o script.
   private static function get_css_js_combined($ext, $version='1', $obfuscate=false)
   {
-    //------------------
+    /** List files **/
     $listFiles    = array(); // Files
     $list_scripts = array(); // Scripts
 
@@ -188,48 +193,48 @@ class CssJs_load
        $list_scripts = self::$list_scripts;
     }
     elseif($ext == 'css') {
-       $listFiles = self::$list_css_combined;
+       $listFiles    = self::$list_css_combined;
+       $list_scripts = self::$list_css_blocks;
+    }
+    else {
+       return false;
     }
 
+
+    /** File cache **/
+    // listKeys
     $listKeys = implode(';', $listFiles) . implode(';', array_keys($list_scripts));
     if(!$listKeys) {
        return;
     }
 
-    // File cache ---------
-    // El nombre se genera con el md5 de la cadena resultante de concatenar todos los nombres de archivos y claves de scripts.
-    // De esta forma se regenera automáticamente al añadir o eliminar un archivo o script.
-    $seccion = self::get_seccion();
-    $fileName = $seccion.'_'.md5($listKeys).'.'.$ext;
-    /* debug */ // print_r2('$fileName: '.$fileName);
+    // File name
+    $cache_fileName  = $version.'_'.md5($listKeys).'.'.$ext;
+    $cache_file_path = self::$path_cache.'/'.$cache_fileName;
+    $cache_file_url  = self::$url_cache.'/'.$cache_fileName;
+    // echo "DEBUG - CssJs_load: cache file: $cache_file_path";
 
-    //----
-    $cache_fileName  = $version.$fileName;
-    $cache_file_path = self::$path_cache.$cache_fileName;
-    $cache_file_url  = self::$url_cache.$cache_fileName;
 
-    /** Write cache **/
+    /** Write cache file **/
     if(!file_exists($cache_file_path))
     {
-       // Read
+       // Read ---
        $strCombined = self::read_files_combined($listFiles, $ext);
+
        if($list_scripts) {
-          $strCombined .= self::read_scripts(true);
+          if($ext == 'js') {
+             $strCombined .= self::read_scripts($list_scripts, true);
+          } else {
+             $strCombined .= self::read_css_blocks($list_scripts);
+          }
        }
 
-       // Write
-       /* debug */ // print_r2('Write >> '.$cache_file_path);
+       // Write ---
        file_put_contents($cache_file_path, $strCombined, FILE_APPEND | LOCK_EX);
-
-       /** Delete prev. version **/
-        $cache_fileName_prev  = ($version-1).$fileName;
-        $cache_file_path_prev = self::$path_cache.$cache_fileName_prev;
-        if(file_exists($cache_file_path_prev)) {
-           unlink($cache_file_path_prev); //echo "unlink: '$cache_file_path_prev'";
-        }
     }
 
-    // OUT ---------------
+
+    /** OUT **/
     if($ext == 'js') {
        echo '<script type="text/javascript" src="'.$cache_file_url.'"></script>'.PHP_EOL ;
     } elseif($ext == 'css') {
@@ -261,12 +266,15 @@ class CssJs_load
     $strCombined = '';
     foreach($listFiles as $file)
     {
-       // $strFile = file_get_contents($file);
+       // Read file ---
        ob_start();
-       include($file);
+       if((@include($file)) === false) {
+          echo "/* NOTICE: el archivo no existe!! */";
+       }
        $strFile = ob_get_clean();
+       // $strFile = UtilsBasic::file_get_contents($file); // no funciona para css dinámicos (con php)
 
-       // Minify
+       // Minify ---
        if(self::$set_minify) {
           if(!strpos($file, '.min.') && !strpos($file, '.packed.')) {
              $strFile = self::{'minify_'.$ext}($strFile);
@@ -283,11 +291,11 @@ class CssJs_load
     return $head.$strCombined;
   }
   //---------------------------------------------------------------------
-  private static function read_scripts($combined=false)
+  private static function read_scripts($list_scripts, $combined=false)
   {
      $strScripts = '';
 
-     foreach(self::$list_scripts as $key => $script)
+     foreach($list_scripts as $key => $script)
      {
         if($combined == true) {
            if(is_string($key)) { // solo los que tienen clave
@@ -308,9 +316,28 @@ class CssJs_load
 
      //-------
      if($strScripts) {
-        return '/* -- scripts -- */'.PHP_EOL . $strScripts;
+        return '/* -- read_scripts() -- */'.PHP_EOL . $strScripts;
      }
      return '';
+  }
+  //---------------------------------------------------------------------
+  private static function read_css_blocks($list_css_blocks)
+  {
+     $strBlocks = '';
+     foreach($list_css_blocks as $key => $block)
+     {
+        if(self::$set_minify) {
+           $block = self::minify_css($block);
+        }
+        $strBlocks .= '/* '.$key.' */ '.$block.PHP_EOL;
+     }
+
+     //-----
+     if($strBlocks) {
+        return '/* -- read_css_blocks() -- */'.PHP_EOL . $strBlocks;
+     } else {
+        return '';
+     }
   }
   //---------------------------------------------------------------------
   // UTILS
@@ -338,20 +365,6 @@ class CssJs_load
      else {
         return true;
      }
-  }
-  //---------------------------------------------------------------------
-  private static function get_seccion()
-  {
-     // Seccion ------
-     $seccion = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-     $seccion = strtok($seccion, '/');
-
-     if(!$seccion || $seccion == 'index.php') {
-        $seccion = '_home';
-     }
-     /* debug */ // print_r2('seccion = '.$seccion);
-
-     return $seccion;
   }
   //---------------------------------------------------------------------
   private static function minify_css($buffer)

@@ -3,7 +3,7 @@ $base_path = './_uploads/';
 
 /** Evitar HotLink **/
  if(isRemoteIp($_SERVER['REMOTE_ADDR'])) {
-    $setError = 'getFoto.php: intento de acceso remoto';
+    $setError = 'getImage.php: external access';
     require('404/404.php');
  }
 

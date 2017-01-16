@@ -8,9 +8,8 @@
 namespace angelrove\utils;
 
 
-class FileSystem {
-  //$ruta, $recursive, $testing
-
+class FileSystem
+{
   //--------------------------------------------------------------------
   public static function deleteFiles($ruta, $testing, $cadena='')
   {
@@ -22,6 +21,7 @@ class FileSystem {
        // Find
        if($cadena) {
           if(substr($file['name'], 0, strlen($cadena)) != $cadena) {
+             //print_r2($file['name'] .'  >>  '. $cadena);
              continue;
           }
        }
@@ -29,11 +29,8 @@ class FileSystem {
        // Delete
        if($testing == true) {
           echo "=> $delFile <br>";
-       }
-       else {
-          if(!@unlink($delFile)) {
-             return "no se pudo eliminar el archivo: [$delFile]";
-          }
+       } else {
+          unlink($delFile);
        }
     }
 
@@ -77,19 +74,14 @@ class FileSystem {
     return $strResult;
   }
   //--------------------------------------------------------------------
-  /* Trabajo con directorios */
-  //--------------------------------------------------------------------
-  public static function copyDir($origen, $destino)
-  {
-  }
-  //--------------------------------------------------------------------
-  public static function moveDir($origen, $destino)
-  {
-  }
+  /* Folders */
   //--------------------------------------------------------------------
   public static function deleteDir($dir)
   {
-     if(!is_dir($dir)) return 'el directorio no existe';
+     if(!is_dir($dir)) {
+        trigger_error('FileSystem::deleteDir(): Ruta incorrecta: "'.$dir.'"');
+        return false;
+      }
 
     // Files
      $listFiles = self::getFiles($dir, true);
@@ -132,11 +124,14 @@ class FileSystem {
      return $ret;
   }
   //--------------------------------------------------------------------
-  private static function getFiles2($lenInicio, $dir, $recursive) {
+  private static function getFiles2($lenInicio, $dir, $recursive)
+  {
+    // print_r2($dir);
+
     ini_set("max_execution_time", 10);
 
     if(!is_dir($dir)) {
-       $strErr = "\n".'FileSystem::getFiles2(): Ruta incorrecta: "'.$dir.'"';
+       $strErr = 'FileSystem::getFiles2(): Ruta incorrecta: ['.$dir.']';
        trigger_error($strErr, E_USER_NOTICE);
        return array();
     }
@@ -144,7 +139,8 @@ class FileSystem {
     $files = array();
 
     $root = opendir($dir);
-    while($file = readdir($root)){
+    while($file = readdir($root))
+    {
        if($file == "." || $file == "..") {
           continue;
        }

@@ -11,6 +11,37 @@ namespace angelrove\utils;
 Class UtilsBasic
 {
   //------------------------------------------------------------------
+  static function file_get_contents($file)
+  {
+     try {
+        if(($ret = @file_get_contents($file)) === false)
+        {
+           throw new \Exception("Warning: UtilsBasic::file_get_contents($file): failed to open stream.");
+        }
+
+        return $ret;
+     }
+     catch (\Exception $e) {
+        throw $e;
+     }
+  }
+  //------------------------------------------------------------------
+  static function file_put_contents($file, $data, $flags=0)
+  {
+     try {
+        if(($ret = @file_put_contents($file, $data, $flags)) === false)
+        {
+           throw new \Exception("Warning: UtilsBasic::file_put_contents($file): failed to open stream");
+        }
+
+        return $ret;
+     }
+     catch (\Exception $e) {
+        throw $e;
+     }
+  }
+  //------------------------------------------------------------------
+  //------------------------------------------------------------------
   static function include_return($file)
   {
      ob_start();
