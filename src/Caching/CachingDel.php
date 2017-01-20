@@ -1,5 +1,5 @@
 <?
-namespace angelrove\utils;
+namespace angelrove\utils\caching;
 
 
 class CachingDel

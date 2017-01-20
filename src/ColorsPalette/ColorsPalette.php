@@ -3,7 +3,7 @@
  *
  */
 
-namespace angelrove\utils;
+namespace angelrove\utils\colorspalette;
 
 use angelrove\utils\Vendor;
 use SoapBox\Csscolor\Csscolor;

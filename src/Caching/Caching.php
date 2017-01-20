@@ -15,7 +15,7 @@
  *   $caching->endCaching();
  */
 
-namespace angelrove\utils;
+namespace angelrove\utils\caching;
 
 
 class Caching

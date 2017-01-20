@@ -22,7 +22,7 @@ class DebugTrace
 
     $idTraza = $_SESSION['id_traza']++;
 
-    CssJs_load::set_script('
+    CssJsLoad::set_script('
   $(document).ready(function() {
     $(".DebugTrace .display").click(function() {
       var id_traza = $(this).attr("id_traza");

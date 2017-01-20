@@ -65,12 +65,14 @@ class Db_mysql
   //------------------------------------------------------------
   /* Consulta */
   //------------------------------------------------------------
-  static function query($query) {
+  static function query($query)
+  {
+    global $CONFIG_APP;
 
     // DEBUG ----
-    // if(DEBUG_SQL) {
-    //    print_r2('DEBUG_SQL: '.$query);
-    // }
+    if($CONFIG_APP['debug']['SQL']) {
+       print_r2('DEBUG_SQL: '.$query);
+    }
     //-----------
 
     if(!$query) {
@@ -125,7 +127,7 @@ class Db_mysql
     $rowArr = self::getRow($query, $setHtmlSpecialChars);
     if(!$rowArr) return $rowArr;
 
-    $row = new stdClass();
+    $row = new \stdClass();
     foreach($rowArr as $field => $value) {
        $row->{$field} = $value;
     }

@@ -7,6 +7,8 @@
 
 namespace angelrove\utils\images;
 
+use angelrove\utils\FileSystem;
+
 
 class ImageTransform {
   //---------------------------------------------------------------------
@@ -15,8 +17,6 @@ class ImageTransform {
    */
   static function thumbsJpegDir($ruta, $thumb_altura, $thumb_prefijo='')
   {
-    require_once('FileSystem.inc');
-
     $ruta .= '/';
     $listFiles = FileSystem::getFiles($ruta, false);
     //print_r2($listFiles);

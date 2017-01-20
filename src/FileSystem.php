@@ -29,7 +29,8 @@ class FileSystem
        // Delete
        if($testing == true) {
           echo "=> $delFile <br>";
-       } else {
+       }
+       else {
           unlink($delFile);
        }
     }

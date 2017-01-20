@@ -7,7 +7,7 @@
 
 namespace angelrove\utils;
 
-use angelrove\utils\CssJs_load;
+use angelrove\utils\CssJsLoad;
 
 
 class Vendor
@@ -67,7 +67,7 @@ class Vendor
       }
       // js / css ---
       else {
-         CssJs_load::set($file_path);
+         CssJsLoad::set($file_path);
       }
 
    }

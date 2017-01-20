@@ -8,7 +8,7 @@
 namespace angelrove\utils;
 
 
-class CssJs_load
+class CssJsLoad
 {
   static private $async  = array(
      'js'  => 'async',
@@ -212,7 +212,7 @@ class CssJs_load
     $cache_fileName  = $version.'_'.md5($listKeys).'.'.$ext;
     $cache_file_path = self::$path_cache.'/'.$cache_fileName;
     $cache_file_url  = self::$url_cache.'/'.$cache_fileName;
-    // echo "DEBUG - CssJs_load: cache file: $cache_file_path";
+    // echo "DEBUG - CssJsLoad: cache file: $cache_file_path";
 
 
     /** Write cache file **/
@@ -251,7 +251,7 @@ class CssJs_load
   {
     // Header ---------
     $head = '/**'.PHP_EOL.
-            ' * lib: angelrove\utils\CssJs_load'.PHP_EOL.
+            ' * lib: angelrove\utils\CssJsLoad'.PHP_EOL.
             ' *'.PHP_EOL.
             ' * url: '.$_SERVER['REQUEST_URI'].PHP_EOL.
             ' * files:'.PHP_EOL.
@@ -259,13 +259,15 @@ class CssJs_load
             ' */'.PHP_EOL.PHP_EOL;
 
     if(self::$set_minify) {
-       $head = '/* lib: angelrove\utils\CssJs_load - url: '.$_SERVER['REQUEST_URI'].' */'.PHP_EOL;
+       $head = '/* lib: angelrove\utils\CssJsLoad - url: '.$_SERVER['REQUEST_URI'].' */'.PHP_EOL;
     }
 
     // List files -----
     $strCombined = '';
     foreach($listFiles as $file)
     {
+       // print_r2($file);
+
        // Read file ---
        ob_start();
        if((@include($file)) === false) {
