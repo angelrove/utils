@@ -8,8 +8,6 @@ namespace angelrove\utils\colorspalette;
 use angelrove\utils\Vendor;
 use SoapBox\Csscolor\Csscolor;
 
-Vendor::usef('css-colors');
-
 
 class ColorsPalette extends Csscolor
 {

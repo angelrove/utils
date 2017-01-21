@@ -43,6 +43,30 @@ class Vendor
       return $url;
    }
    //-------------------------------------------------
+   // Composer
+   //-------------------------------------------------
+   static function get_path_vendor($namespace, $classname)
+   {
+      $map = require DOCUMENT_ROOT.'/../vendor/composer/autoload_psr4.php';
+      // print_r2($map);
+      $ret = $map[$namespace.'\\'][0];
+      return $ret;
+   }
+   //-------------------------------------------------
+   static function get_url_vendor($namespace)
+   {
+      // Get Composer autoloads ---
+      $json = json_decode(file_get_contents(DOCUMENT_ROOT.'/../composer.json'), true);
+      $composer_autoloads = $json['autoload']['psr-4'];
+      // print_r($composer_autoloads);
+
+      $url = '/'.$composer_autoloads[$namespace.'\\'];
+      // print_r2($url);
+
+      return $url;
+   }
+   //-------------------------------------------------
+   //-------------------------------------------------
    static function show_paths()
    {
       print_r2(self::$paths);
