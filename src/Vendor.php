@@ -29,20 +29,6 @@ class Vendor
       self::$resources[$key] = $files;
    }
    //-------------------------------------------------
-   static function get_path($key)
-   {
-      return self::$paths[$key];
-   }
-   //-------------------------------------------------
-   static function get_url($key)
-   {
-      $url = self::get_path($key);
-      $url = str_replace(PATH_VENDOR, '', $url);
-      $url = URL_VENDOR.$url;
-
-      return $url;
-   }
-   //-------------------------------------------------
    // Composer
    //-------------------------------------------------
    static function get_path_vendor($namespace, $classname)
@@ -66,11 +52,6 @@ class Vendor
       return $url;
    }
    //-------------------------------------------------
-   //-------------------------------------------------
-   static function show_paths()
-   {
-      print_r2(self::$paths);
-   }
    //-------------------------------------------------
    static function usef($key, $op='')
    {
