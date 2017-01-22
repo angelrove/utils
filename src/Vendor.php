@@ -39,42 +39,27 @@ class Vendor
       return $ret;
    }
    //-------------------------------------------------
-   static function get_url_vendor($namespace)
-   {
-      // Get Composer autoloads ---
-      $json = json_decode(file_get_contents(DOCUMENT_ROOT.'/../composer.json'), true);
-      $composer_autoloads = $json['autoload']['psr-4'];
-      // print_r($composer_autoloads);
+   // static function get_url_vendor($namespace)
+   // {
+   //    // Get Composer autoloads ---
+   //    $json = json_decode(file_get_contents(DOCUMENT_ROOT.'/../composer.json'), true);
+   //    $composer_autoloads = $json['autoload']['psr-4'];
+   //    // print_r($composer_autoloads);
 
-      $url = '/'.$composer_autoloads[$namespace.'\\'];
-      // print_r2($url);
+   //    $url = '/'.$composer_autoloads[$namespace.'\\'];
+   //    // print_r2($url);
 
-      return $url;
-   }
+   //    return $url;
+   // }
    //-------------------------------------------------
    //-------------------------------------------------
    static function usef($key, $op='')
    {
       foreach(self::$resources[$key] as $file)
       {
-         self::inc_file($key, $file);
-      }
-   }
-   //-------------------------------------------------
-   static private function inc_file($key, $file)
-   {
-      $file_path = self::$paths[$key].$file;
-      $ext = substr($file, -4);
-
-      // PHP -------
-      if($ext == '.php' || $ext == '.inc') {
-         include_once($file_path);
-      }
-      // js / css ---
-      else {
+         $file_path = self::$paths[$key].$file;
          CssJsLoad::set($file_path);
       }
-
    }
    //-------------------------------------------------
 }
