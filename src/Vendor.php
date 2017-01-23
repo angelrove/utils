@@ -12,8 +12,6 @@ use angelrove\utils\CssJsLoad;
 
 class Vendor
 {
-   // static private $path_vendor = '';
-
    static private $paths     = array();
    static private $resources = array();
 
@@ -31,14 +29,23 @@ class Vendor
    //-------------------------------------------------
    // Composer
    //-------------------------------------------------
-   static function get_path_vendor($namespace, $classname)
-   {
-      $map = require DOCUMENT_ROOT.'/../vendor/composer/autoload_psr4.php';
-      // print_r2($map);
-      $ret = $map[$namespace.'\\'][0];
-      return $ret;
-   }
-   //-------------------------------------------------
+   // static function get_path_vendor($namespace, $classname)
+   // {
+   //    try {
+   //       $map = require(PATH_VENDOR.'/composer/autoload_psr4.php');
+   //       // print_r2($map);
+
+   //       if(!$ret = $map[$namespace.'\\'][0]) {
+   //          throw new \Exception("Error: namespace [$namespace] not found in [composer.json]");
+   //       }
+
+   //       return $ret;
+   //    }
+   //    catch(Exception $e) {
+   //       return false;
+   //    }
+   // }
+   // //-------------------------------------------------
    // static function get_url_vendor($namespace)
    // {
    //    // Get Composer autoloads ---

@@ -284,8 +284,9 @@ class CssJsLoad
        }
 
        //---
-       $parts = explode('/', $file, 3);
-       $strCombined .= PHP_EOL.'/**-- '.$parts[2].' --**/'.PHP_EOL;
+       $parts = pathinfo($file);
+       // print_r2($parts);
+       $strCombined .= PHP_EOL.'/**-- '.$parts['basename'].' --**/'.PHP_EOL;
        $strCombined .= $strFile.PHP_EOL;
     }
     //-----------------
