@@ -5,6 +5,7 @@
 
 namespace angelrove\utils\images;
 
+
 class ImageWatermark {
   //----------------------------------------------------------
   static function show($image, $text) {
