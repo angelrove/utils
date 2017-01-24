@@ -285,7 +285,8 @@ Class UtilsBasic
      }
      //---------------
      // lightbox
-     if($type == 'lightbox') {
+     if($type == 'lightbox')
+     {
         $img =
           '<a class="htm_img img-thumbnail '.$class.'" href="'.$datos['ruta_completa'].'" data-lightbox="file_img">'.
              '<img class="img-responsive"'.

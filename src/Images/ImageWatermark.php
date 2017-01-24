@@ -6,14 +6,17 @@
 namespace angelrove\utils\images;
 
 
-class ImageWatermark {
+class ImageWatermark
+{
   //----------------------------------------------------------
-  static function show($image, $text) {
+  static function show($image, $text)
+  {
     $imageText = self::getImg($image, $text);
     $imageText->showImage();
   }
   //----------------------------------------------------------
-  static function updateImg($image, $text) {
+  static function updateImg($image, $text)
+  {
     $imageText = self::getImg($image, $text);
     $imageText->setImage_file($image);
   }
@@ -34,6 +37,7 @@ class ImageWatermark {
     $imageText = new ImageText($text, $tx_posX, $tx_posY, $tx_font, $tx_fontSize, $tx_fontColor);
     $imageText->setBgImg($image);
     $imageText->setTransparencyText();
+
     return $imageText;
   }
   //----------------------------------------------------------

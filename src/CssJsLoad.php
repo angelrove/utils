@@ -15,6 +15,8 @@ class CssJsLoad
      'css' => 'media="none" onload="if(media!=\'all\')media=\'all\'"'
   );
 
+  static private $cache_enabled = true;
+
   static private $path_cache = '';
   static private $url_cache  = '';
 
@@ -132,8 +134,10 @@ class CssJsLoad
   //---------------------------------------------------------------------
   // GETTERS
   //---------------------------------------------------------------------
-  public static function get_css($version='1')
+  public static function get_css($version='1', $cache_enabled=true)
   {
+    self::$cache_enabled = $cache_enabled;
+
     self::get_css_js_files(self::$list_css_http, 'css');
     self::get_css_js_combined('css', $version);
     self::get_css_js_files(self::$list_css, 'css');
@@ -216,7 +220,7 @@ class CssJsLoad
 
 
     /** Write cache file **/
-    if(!file_exists($cache_file_path))
+    if(self::$cache_enabled === false || !file_exists($cache_file_path))
     {
        // Read ---
        $strCombined = self::read_files_combined($listFiles, $ext);
