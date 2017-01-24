@@ -218,9 +218,14 @@ class CssJsLoad
     $cache_file_url  = self::$url_cache.'/'.$cache_fileName;
     // echo "DEBUG - CssJsLoad: cache file: $cache_file_path";
 
+    /** Cache disabled **/
+    if(self::$cache_enabled === false)
+    {
+       @unlink($cache_file_path);
+    }
 
     /** Write cache file **/
-    if(self::$cache_enabled === false || !file_exists($cache_file_path))
+    if(!file_exists($cache_file_path))
     {
        // Read ---
        $strCombined = self::read_files_combined($listFiles, $ext);

@@ -76,12 +76,14 @@ Class UtilsBasic
   //------------------------------------------------------------------
   // Arrays
   //------------------------------------------------------------------
-  static function array_is_assoc($arr) {
+  static function array_is_assoc($arr)
+  {
     return array_keys($arr) !== range(0, count($arr) - 1);
   }
   //------------------------------------------------------------------
   // Introduce uno o más elementos al principio de la matriz asociativa
-  static function array_unshift_assoc(&$arr, $key, $val) {
+  static function array_unshift_assoc(&$arr, $key, $val)
+  {
     $arr = array_reverse($arr, true);
     $arr[$key] = $val;
     $arr = array_reverse($arr, true);
@@ -89,7 +91,8 @@ Class UtilsBasic
   }
   //------------------------------------------------------------------
   // Concatena todas las cadenas de un array mediante un separador dado
-  static function array_implode($sep, $listStr) {
+  static function array_implode($sep, $listStr)
+  {
     $strResult = '';
 
     $c=0;
@@ -107,43 +110,6 @@ Class UtilsBasic
     }
 
     return $strResult;
-  }
-  //------------------------------------------------------------------
-  // Parse strings
-  //------------------------------------------------------------------
-  static function str_getFriendly($str) {
-    $str = trim(strtolower($str));
-    $str = self::str_parseEsChars($str);
-    $str = self::str_clean($str);
-    return $str;
-  }
-  //------------------------------------------------------------------
-  static function str_clean($string) {
-    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-    $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-
-    return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
-  }
-  //------------------------------------------------------------------
-  static function str_parseEsChars($str) {
-    $charsES = array('á', 'é', 'í', 'ó', 'ú',
-                     'Á', 'É', 'Í', 'Ó', 'Ú',
-                     'à', 'è', 'ì', 'ò', 'ù',
-                     'À', 'È', 'Ì', 'Ò', 'Ù',
-                     'â', 'ê', 'î', 'ô', 'û',
-                     'Â', 'Ê', 'Î', 'Ô', 'Û',
-                     'ñ', 'Ñ',
-                     );
-    $chars   = array('a', 'e', 'i', 'o', 'u',
-                     'a', 'e', 'i', 'o', 'u',
-                     'a', 'e', 'i', 'o', 'u',
-                     'a', 'e', 'i', 'o', 'u',
-                     'a', 'e', 'i', 'o', 'u',
-                     'a', 'e', 'i', 'o', 'u',
-                     'n', 'n',
-                     );
-
-    return str_ireplace($charsES, $chars, $str);
   }
   //------------------------------------------------------------------
   //------------------------------------------------------------------
@@ -179,9 +145,7 @@ Class UtilsBasic
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <style>
     body {
-     background=#fff;
-     font-family: Verdana, Arial;
-     line-height: 21px;
+     background=#fff; font-family: Verdana, Arial; line-height: 21px;
     }
     </style>
   </head>
@@ -216,6 +180,7 @@ Class UtilsBasic
     }
 
     global $CONFIG_APP;
+
     if(isset($CONFIG_APP)) {
        $URL_UPLOADS  = $CONFIG_APP['url_uploads'];
        $PATH_UPLOADS = $CONFIG_APP['path_uploads'];
@@ -331,7 +296,33 @@ Class UtilsBasic
     return $file;
   }
   //------------------------------------------------------------------
-  // Obtener un CSV a partir de un array
+  // $file = "/www/movie.mpg";
+  function get_mime_type($file)
+  {
+    $handle = finfo_open(FILEINFO_MIME);
+    $ret['mime'] = finfo_file($handle, $file); //gives "video/mpeg"
+
+    // type: IMAGE, IMAGE_SWF, FILE
+    switch($ret['mime']) {
+      case 'image/gif':
+      case 'image/pjpeg':
+      case 'image/jpeg':
+        $ret['type'] = 'IMAGE';
+      break;
+      case 'application/x-shockwave-flash':
+        $ret['type'] = 'IMAGE_SWF';
+      break;
+      default:
+        $ret['type'] = 'FILE';
+      break;
+    }
+
+    return $ret;
+  }
+  //------------------------------------------------------------------
+  /*
+   * Obtener un CSV a partir de un array
+   */
   static function get_csv($listFields, $listRows, $SEP, $isDebug=false, $fileName='export.csv')
   {
     $LINE_RET = ($isDebug)? '<br>' : "\n";
