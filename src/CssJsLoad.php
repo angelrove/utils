@@ -42,7 +42,7 @@ class CssJsLoad
   //---------------------------------------------------------------------
   // CONF
   //---------------------------------------------------------------------
-  public static function _init($path_cache, $url_cache)
+  public static function __init($path_cache, $url_cache)
   {
      self::$path_cache = $path_cache;
      self::$url_cache  = $url_cache;
