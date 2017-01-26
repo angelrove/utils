@@ -115,12 +115,8 @@ Class FileUploaded
   }
   //----------------------------------------------------------
   // $type: '', 'lightbox'
-  // static function get_htm_img($datos, $type='', $alt='', $class='', $op_nofoto=false, $link='')
   static function getHtmlImg($datos, $type='', $alt='', $class='', $op_nofoto=false, $link='')
   {
-     // echo "=> FileUploaded::getHtmlImg($type, $alt, $class, $op_nofoto)";
-     // print_r2($datos);
-
      $img = '';
 
      //-------
