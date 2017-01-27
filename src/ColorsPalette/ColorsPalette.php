@@ -3,7 +3,7 @@
  *
  */
 
-namespace angelrove\utils\colorspalette;
+namespace angelrove\utils\ColorsPalette;
 
 use angelrove\utils\Vendor;
 use angelrove\clone_csscolor\CSS_Color;

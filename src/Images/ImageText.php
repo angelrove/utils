@@ -12,7 +12,7 @@
  *
  */
 
-namespace angelrove\utils\images;
+namespace angelrove\utils\Images;
 
 
 class ImageText {

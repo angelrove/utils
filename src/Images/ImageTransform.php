@@ -5,7 +5,7 @@
  *
  */
 
-namespace angelrove\utils\images;
+namespace angelrove\utils\Images;
 
 use angelrove\utils\FileSystem;
 
