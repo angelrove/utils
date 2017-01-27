@@ -9,7 +9,7 @@ use angelrove\utils\Vendor;
 use SoapBox\Csscolor\Csscolor;
 
 
-class ColorsPalette extends Csscolor
+class ColorsPalette extends CSS_Color
 {
   //----------------------------------------------------------------
   function __construct($baseColor)

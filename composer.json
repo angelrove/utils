@@ -8,6 +8,17 @@
             "email": "jangel.romero@gmail.com"
         }
     ],
+
+    "require-dev": {
+       "angelrove/membrillo": "dev-master",
+       "angelrove/utils": "dev-master",
+       "angelrove/front-components": "dev-master",
+       "angelrove/mod-Blog":  "dev-master",
+       "angelrove/clone-camera-slideshow": "dev-master",
+       "angelrove/clone-csscolor": "dev-master"
+       "angelrove/clone-shortcut-js": "dev-master"
+    },
+
     "require": {
 
     },
