@@ -1,7 +1,7 @@
 {
     "name": "angelrove/utils",
     "type": "library",
-    "description": "My Utils",
+    "description": "Basic Utils",
     "authors": [
         {
             "name": "Jose Angel Romero",
@@ -10,17 +10,10 @@
     ],
 
     "require-dev": {
-       "angelrove/membrillo": "dev-master",
-       "angelrove/utils": "dev-master",
-       "angelrove/front-components": "dev-master",
-       "angelrove/mod-Blog":  "dev-master",
-       "angelrove/clone-camera-slideshow": "dev-master",
-       "angelrove/clone-csscolor": "dev-master",
-       "angelrove/clone-shortcut-js": "dev-master"
+       "angelrove/clone-csscolor": "dev-master"
     },
 
     "require": {
-
     },
     "autoload": {
         "classmap": [
