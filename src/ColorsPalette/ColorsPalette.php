@@ -6,7 +6,7 @@
 namespace angelrove\utils\colorspalette;
 
 use angelrove\utils\Vendor;
-use SoapBox\Csscolor\Csscolor;
+use angelrove\clone_csscolor\CSS_Color;
 
 
 class ColorsPalette extends CSS_Color

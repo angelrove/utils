@@ -242,7 +242,6 @@ class CssJsLoad
        file_put_contents($cache_file_path, $strCombined, FILE_APPEND | LOCK_EX);
     }
 
-
     /** OUT **/
     if($ext == 'js') {
        echo '<script type="text/javascript" src="'.$cache_file_url.'"></script>'.PHP_EOL ;
@@ -279,7 +278,7 @@ class CssJsLoad
 
        // Read file ---
        ob_start();
-       if((@include($file)) === false) {
+       if((include_once($file)) === false) {
           echo "/* NOTICE: el archivo no existe!! */";
        }
        $strFile = ob_get_clean();
