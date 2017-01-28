@@ -41,7 +41,8 @@ class CssJsLoad
   static private $list_css_combined = array();
   static private $list_js_combined  = array();
 
-  static private $called_get_cssjs = false;
+  static private $called_get_css = false;
+  static private $called_get_js  = false;
 
 
   //---------------------------------------------------------------------
@@ -61,9 +62,17 @@ class CssJsLoad
   //---------------------------------------------------------------------
   // SETTERS
   //---------------------------------------------------------------------
-  public static function check_get_calls()
+  public static function check_getjs_calls()
   {
-     if(self::$called_get_cssjs == true) {
+     if(self::$called_get_js == true) {
+        // trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
+        throw new \Exception("Called 'set()' after 'get()'", E_USER_WARNING);
+     }
+  }
+  //---------------------------------------------------------------------
+  public static function check_getcss_calls()
+  {
+     if(self::$called_get_css == true) {
         // trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
         throw new \Exception("Called 'set()' after 'get()'", E_USER_WARNING);
      }
@@ -99,7 +108,7 @@ class CssJsLoad
   //---------------------------------------------------------------------
   public static function set_js($file, $async=false)
   {
-     self::check_get_calls();
+     self::check_getjs_calls();
 
      self::$async_files[$file] = $async;
      self::$list_js[$file] = $file;
@@ -107,7 +116,7 @@ class CssJsLoad
   //---------------------------------------------------------------------
   public static function set_css($file, $async=false, $combined=false)
   {
-     self::check_get_calls();
+     self::check_getcss_calls();
 
      self::$async_files[$file] = $async;
 
@@ -125,7 +134,7 @@ class CssJsLoad
   //---------------------------------------------------------------------
   public static function set_less($file, $async=false)
   {
-     self::check_get_calls();
+     // self::check_get_calls();
 
      self::$async_files[$file] = $async;
      self::$list_less[$file] = $file;
@@ -134,7 +143,7 @@ class CssJsLoad
   // Dependiendo de si usa o no clave, sera combined o no
   public static function set_script($script, $key='')
   {
-     self::check_get_calls();
+     self::check_getjs_calls();
 
      if($key) {
         self::$list_scripts[$key] = $script;
@@ -145,7 +154,7 @@ class CssJsLoad
   //---------------------------------------------------------------------
   public static function set_css_block($css, $key='')
   {
-     self::check_get_calls();
+     self::check_getcss_calls();
 
      if($key) {
         self::$list_css_blocks[$key] = $css;
@@ -158,14 +167,14 @@ class CssJsLoad
   //---------------------------------------------------------------------
   private static function set_js_combined($file)
   {
-     self::check_get_calls();
+     self::check_getjs_calls();
 
      self::$list_js_combined[$file] = $file;
   }
   //---------------------------------------------------------------------
   private static function set_css_combined($file)
   {
-     self::check_get_calls();
+     self::check_getcss_calls();
 
      self::$list_css_combined[$file] = $file;
   }
@@ -175,7 +184,7 @@ class CssJsLoad
   public static function get_css($version='1', $cache_enabled=true)
   {
     // called: get() ---
-    self::$called_get_cssjs = true;
+    self::$called_get_css = true;
     //------------------
 
     self::$cache_enabled = $cache_enabled;
@@ -189,7 +198,7 @@ class CssJsLoad
   public static function get_js($version='1')
   {
     // called: get() ---
-    self::$called_get_cssjs = true;
+    self::$called_get_js = true;
     //------------------
 
     self::get_css_js_files(self::$list_js, 'js');
