@@ -27,7 +27,18 @@ class MyErrorHandler
       //-------------
       ini_set('error_log',      self::$PATH_LOGS.'/'.self::$file_pref.'php-error.log');
       ini_set('display_errors', self::$display_errors);
+
+      //-------------
       set_error_handler("angelrove\utils\MyErrorHandler::handler");
+      set_exception_handler("angelrove\utils\MyErrorHandler::handler_excentions");
+  }
+  //------------------------------------------------------------------
+  static function handler_excentions($e)
+  {
+     // print_r2($e);
+     $msg = $e->getMessage().' in '.$e->getFile().'('.$e->getLine().')'."\n".
+            $e->getTraceASString();
+     print_r2($msg);
   }
   //------------------------------------------------------------------
   static function handler($errno, $errstr, $errfile, $errline)
@@ -36,6 +47,7 @@ class MyErrorHandler
       if(!(error_reporting() & $errno)) {
          return;
       }
+      // print_r2("$errno,\n $errstr,\n $errfile,\n $errline");
 
       //--------------
       switch($errno) {
@@ -43,12 +55,11 @@ class MyErrorHandler
         case E_USER_ERROR:
           self::write_log('user', $errstr, $errfile, $errline);
         break;
-
         case E_NOTICE:
           self::write_log('notice', $errstr, $errfile, $errline);
         break;
-
         case E_WARNING:
+        case E_USER_WARNING:
           self::write_log('warning', $errstr, $errfile, $errline);
         break;
 
@@ -61,8 +72,31 @@ class MyErrorHandler
       //  - necesario para que se muestren los errores en pantalla
       //  - escribirá los errores en la ruta por defecto definida en 'error_log'
       if(self::$display_errors) {
+         print_r2(self::debug_string_backtrace());
          return false;
       }
+  }
+  //------------------------------------------------------------------
+  /*
+   * @author php.net/manual/es/function.debug-print-backtrace.php#86932
+   */
+  private static function debug_string_backtrace()
+  {
+      ob_start();
+      debug_print_backtrace(0, 8);
+      $trace = ob_get_contents();
+      ob_end_clean();
+
+      // Remove first item from backtrace as it's this function which is redundant.
+      $trace = preg_replace('/^.+\n/', '', $trace);
+      $trace = preg_replace('/^.+\n/', '', $trace);
+      // $trace = preg_replace('/^.+\n/', '', $trace);
+
+      // Renumber backtrace items.
+      // $trace = preg_replace('/^#(\d+)/me', '\'#\' . ($1 - 1)', $trace);
+      $trace = preg_replace('/^#(\d+)/m', '#', $trace);
+
+      return $trace;
   }
   //------------------------------------------------------------------
   static private function write_log($id_file, $errstr, $errfile, $errline)

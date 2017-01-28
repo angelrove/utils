@@ -7,6 +7,8 @@
 
 namespace angelrove\utils;
 
+use angelrove\utils\FileContent;
+
 
 class CssJsLoad
 {
@@ -39,6 +41,9 @@ class CssJsLoad
   static private $list_css_combined = array();
   static private $list_js_combined  = array();
 
+  static private $called_get_cssjs = false;
+
+
   //---------------------------------------------------------------------
   // CONF
   //---------------------------------------------------------------------
@@ -56,20 +61,28 @@ class CssJsLoad
   //---------------------------------------------------------------------
   // SETTERS
   //---------------------------------------------------------------------
+  public static function check_get_calls()
+  {
+     if(self::$called_get_cssjs == true) {
+        // trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
+        throw new \Exception("Called 'set()' after 'get()'", E_USER_WARNING);
+     }
+  }
+  //---------------------------------------------------------------------
   public static function set($file, $async=false)
   {
      // Combined -------
      if(self::$default_combined && !self::is_http($file))
      {
         if(!file_exists($file)) {
-           trigger_error("File not found: $file", E_USER_NOTICE);
-           return false;
+           // trigger_error("File not found: $file", E_USER_NOTICE);
+           throw new \Exception("File not found: $file", E_USER_WARNING);
         }
 
         if(self::get_type($file) == 'js') {
-           self::$list_js_combined[$file]  = $file;
+           self::set_js_combined($file);
         } else {
-           self::$list_css_combined[$file] = $file;
+           self::set_css_combined($file);
         }
 
      }
@@ -84,15 +97,18 @@ class CssJsLoad
      }
   }
   //---------------------------------------------------------------------
-  //---------------------------------------------------------------------
   public static function set_js($file, $async=false)
   {
+     self::check_get_calls();
+
      self::$async_files[$file] = $async;
      self::$list_js[$file] = $file;
   }
   //---------------------------------------------------------------------
   public static function set_css($file, $async=false, $combined=false)
   {
+     self::check_get_calls();
+
      self::$async_files[$file] = $async;
 
      if($combined) {
@@ -109,6 +125,8 @@ class CssJsLoad
   //---------------------------------------------------------------------
   public static function set_less($file, $async=false)
   {
+     self::check_get_calls();
+
      self::$async_files[$file] = $async;
      self::$list_less[$file] = $file;
   }
@@ -116,26 +134,50 @@ class CssJsLoad
   // Dependiendo de si usa o no clave, sera combined o no
   public static function set_script($script, $key='')
   {
-    if($key) {
-       self::$list_scripts[$key] = $script;
-    } else {
-       self::$list_scripts[] = $script;
-    }
+     self::check_get_calls();
+
+     if($key) {
+        self::$list_scripts[$key] = $script;
+     } else {
+        self::$list_scripts[] = $script;
+     }
   }
   //---------------------------------------------------------------------
   public static function set_css_block($css, $key='')
   {
-    if($key) {
-       self::$list_css_blocks[$key] = $css;
-    } else {
-       self::$list_css_blocks[] = $css;
-    }
+     self::check_get_calls();
+
+     if($key) {
+        self::$list_css_blocks[$key] = $css;
+     } else {
+        self::$list_css_blocks[] = $css;
+     }
+  }
+  //---------------------------------------------------------------------
+  // PRIVATE
+  //---------------------------------------------------------------------
+  private static function set_js_combined($file)
+  {
+     self::check_get_calls();
+
+     self::$list_js_combined[$file] = $file;
+  }
+  //---------------------------------------------------------------------
+  private static function set_css_combined($file)
+  {
+     self::check_get_calls();
+
+     self::$list_css_combined[$file] = $file;
   }
   //---------------------------------------------------------------------
   // GETTERS
   //---------------------------------------------------------------------
   public static function get_css($version='1', $cache_enabled=true)
   {
+    // called: get() ---
+    self::$called_get_cssjs = true;
+    //------------------
+
     self::$cache_enabled = $cache_enabled;
 
     self::get_css_js_files(self::$list_css_http, 'css');
@@ -146,6 +188,10 @@ class CssJsLoad
   //---------------------------------------------------------------------
   public static function get_js($version='1')
   {
+    // called: get() ---
+    self::$called_get_cssjs = true;
+    //------------------
+
     self::get_css_js_files(self::$list_js, 'js');
     self::get_css_js_combined('js', $version);
     self::get_js_scripts();
@@ -272,17 +318,17 @@ class CssJsLoad
 
     // List files -----
     $strCombined = '';
-    foreach($listFiles as $file)
+    $c=0;
+    foreach ($listFiles as $file)
     {
-       // print_r2($file);
-
        // Read file ---
-       ob_start();
-       if((include_once($file)) === false) {
-          echo "/* NOTICE: el archivo no existe!! */";
+       // print_r2($file);
+       try {
+          $strFile = FileContent::include_return($file);
        }
-       $strFile = ob_get_clean();
-       // $strFile = UtilsBasic::file_get_contents($file); // no funciona para css dinámicos (con php)
+       catch (\Exception $e) {
+          throw new \Exception($e->getMessage());
+       }
 
        // Minify ---
        if(self::$set_minify) {

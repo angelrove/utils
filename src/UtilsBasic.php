@@ -11,45 +11,7 @@ namespace angelrove\utils;
 Class UtilsBasic
 {
   //------------------------------------------------------------------
-  static function file_get_contents($file)
-  {
-     try {
-        if(($ret = @file_get_contents($file)) === false)
-        {
-           throw new \Exception("Warning: UtilsBasic::file_get_contents($file): failed to open stream.");
-        }
-
-        return $ret;
-     }
-     catch (\Exception $e) {
-        throw $e;
-     }
-  }
-  //------------------------------------------------------------------
-  static function file_put_contents($file, $data, $flags=0)
-  {
-     try {
-        if(($ret = @file_put_contents($file, $data, $flags)) === false)
-        {
-           throw new \Exception("Warning: UtilsBasic::file_put_contents($file): failed to open stream");
-        }
-
-        return $ret;
-     }
-     catch (\Exception $e) {
-        throw $e;
-     }
-  }
-  //------------------------------------------------------------------
-  //------------------------------------------------------------------
-  static function include_return($file)
-  {
-     ob_start();
-     include($file);
-     return ob_get_clean();
-  }
-  //------------------------------------------------------------------
-  static function parse_domain($host='')
+  public static function parse_domain($host='')
   {
     if(!$host) {
        $host = $_SERVER['HTTP_HOST'];
@@ -76,13 +38,13 @@ Class UtilsBasic
   //------------------------------------------------------------------
   // Arrays
   //------------------------------------------------------------------
-  static function array_is_assoc($arr)
+  public static function array_is_assoc($arr)
   {
     return array_keys($arr) !== range(0, count($arr) - 1);
   }
   //------------------------------------------------------------------
   // Introduce uno o más elementos al principio de la matriz asociativa
-  static function array_unshift_assoc(&$arr, $key, $val)
+  public static function array_unshift_assoc(&$arr, $key, $val)
   {
     $arr = array_reverse($arr, true);
     $arr[$key] = $val;
@@ -91,7 +53,7 @@ Class UtilsBasic
   }
   //------------------------------------------------------------------
   // Concatena todas las cadenas de un array mediante un separador dado
-  static function array_implode($sep, $listStr)
+  public static function array_implode($sep, $listStr)
   {
     $strResult = '';
 
@@ -118,7 +80,7 @@ Class UtilsBasic
    *   - Elimina la codificación UTF8.
    *   - Ejemplo de $from = 'Galletas Fontaneda <gfontaneda@gmail.com>';
    */
-  static function sendEMail($from, $mailto, $bcc, $asunto, $body, $ReplyTo='')
+  public static function sendEMail($from, $mailto, $bcc, $asunto, $body, $ReplyTo='')
   {
     $from   = utf8_decode($from);
     $asunto = utf8_decode($asunto);
@@ -172,7 +134,7 @@ Class UtilsBasic
   /*
    * Obtener un CSV a partir de un array
    */
-  static function get_csv($listFields, $listRows, $SEP, $isDebug=false, $fileName='export.csv')
+  public static function get_csv($listFields, $listRows, $SEP, $isDebug=false, $fileName='export.csv')
   {
     $LINE_RET = ($isDebug)? '<br>' : "\n";
 
