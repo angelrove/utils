@@ -13,7 +13,8 @@ class Db_mysql
   public static $db_dbconn;
 
   //------------------------------------------------------------
-  static function getConn($dbHost, $dbUser, $dbPassword, $database) {
+  public static function getConn($dbHost, $dbUser, $dbPassword, $database)
+  {
     if(!$dbUser) {
        trigger_error("getConn(): faltan datos", E_USER_ERROR);
     }
@@ -59,13 +60,14 @@ class Db_mysql
     return self::$db_dbconn;
   }
   //------------------------------------------------------------
-  static function real_escape_string($str) {
+  public static function real_escape_string($str)
+  {
     return mysqli_real_escape_string(self::$db_dbconn, $str);
   }
   //------------------------------------------------------------
   /* Consulta */
   //------------------------------------------------------------
-  static function query($query)
+  public static function query($query)
   {
     global $CONFIG_APP;
 
@@ -93,7 +95,8 @@ class Db_mysql
   //------------------------------------------------------------
   /* Obtener un valor */
   //------------------------------------------------------------
-  static function getValue($query) {
+  public static function getValue($query)
+  {
     $result = self::query($query);
     if(!$result) return;
     if(!mysqli_num_rows($result)) return;
@@ -106,7 +109,8 @@ class Db_mysql
   //------------------------------------------------------------
   /* Obtener una tupla */
   //------------------------------------------------------------
-  static function getRow($query, $setHtmlSpecialChars=true) {
+  public static function getRow($query, $setHtmlSpecialChars=true)
+  {
     if(!$query) {
        return false;
     }
@@ -123,7 +127,8 @@ class Db_mysql
     return $row;
   }
   //------
-  static function getRowObject($query, $setHtmlSpecialChars=true) {
+  public static function getRowObject($query, $setHtmlSpecialChars=true)
+  {
     $rowArr = self::getRow($query, $setHtmlSpecialChars);
     if(!$rowArr) return $rowArr;
 
@@ -137,7 +142,8 @@ class Db_mysql
   //------------------------------------------------------------
   /* Obtener un listado: array de arrays o array de objetos */
   //------------------------------------------------------------
-  static function getList($query) {
+  public static function getList($query)
+  {
     $listRows = array();
 
     $result = self::query($query);
@@ -153,7 +159,7 @@ class Db_mysql
     return $listRows;
   }
   //----------
-  static function getListObject($query) {
+  public static function getListObject($query) {
     $listRows = array();
 
     $result = self::query($query);
@@ -169,7 +175,7 @@ class Db_mysql
     return $listRows;
   }
   //----------
-  static function getListOneField($query, $noId=false)
+  public static function getListOneField($query, $noId=false)
   {
     $listRows = array();
     $result = self::query($query);
@@ -192,7 +198,7 @@ class Db_mysql
     return $listRows;
   }
   //------
-  static function getListNoId($query) {
+  public static function getListNoId($query) {
     $listRows = array();
 
     $result = self::query($query);
@@ -209,7 +215,7 @@ class Db_mysql
   }
   //------
   /*
-  static function getListRango($query, $inicio, $numRows, $asObject=true) {
+  public static function getListRango($query, $inicio, $numRows, $asObject=true) {
     $listRows = array();
 
     // Query
@@ -253,7 +259,7 @@ class Db_mysql
   }
   */
   //------
-  static function getListObjectNoId($query) {
+  public static function getListObjectNoId($query) {
     $listRows = array();
 
     $result = self::query($query);
@@ -267,7 +273,8 @@ class Db_mysql
   //------------------------------------------------------------
   // sqlFiltro: "AND column_name<>'fecha' AND column_name<>'id_dominio'"
   // Ejem.: self::duplicateRow('noticias_modulos', $id, "", 'id_web', $id_web);
-  static function duplicateRow($table, $id, $sqlFiltro, $replace_field1='', $replace_field_value1='', $replace_field2='', $replace_field_value2='') {
+  public static function duplicateRow($table, $id, $sqlFiltro, $replace_field1='', $replace_field_value1='', $replace_field2='', $replace_field_value2='')
+  {
     $sqlListCampos = "SELECT column_name AS nombre FROM information_schema.columns WHERE table_name='$table' AND column_name<>'id' $sqlFiltro";
     $listCampos = self::getListOneField($sqlListCampos, true);
 
@@ -288,15 +295,15 @@ class Db_mysql
   //------------------------------------------------------------
   /* Info */
   //------------------------------------------------------------
-  static function insert_id() {
+  public static function insert_id() {
     return mysqli_insert_id(self::$db_dbconn);
   }
   //--------------
-  static function affected_rows() {
+  public static function affected_rows() {
     return mysqli_affected_rows(self::$db_dbconn);
   }
   //--------------
-  static function getNumRows($sqlQuery) {
+  public static function getNumRows($sqlQuery) {
     // Eliminar saltos de linea
     $sqlQuery2 = str_replace("\r", '',    $sqlQuery);
     $sqlQuery2 = str_replace("\n", '[#]', $sqlQuery2);

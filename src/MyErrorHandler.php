@@ -18,7 +18,7 @@ class MyErrorHandler
   private static $file_pref;
 
   //------------------------------------------------------------------
-  static function init($display_errors, $PATH_LOGS, $file_pref='')
+  public static function init($display_errors, $PATH_LOGS, $file_pref='')
   {
       self::$display_errors = $display_errors;
       self::$PATH_LOGS = $PATH_LOGS;
@@ -33,21 +33,21 @@ class MyErrorHandler
       set_exception_handler("angelrove\utils\MyErrorHandler::handler_excentions");
   }
   //------------------------------------------------------------------
-  static function handler_excentions($e)
+  public static function handler_excentions($e)
   {
-     // print_r2($e);
+     // self::print_err($e);
      $msg = $e->getMessage().' in '.$e->getFile().'('.$e->getLine().')'."\n".
             $e->getTraceASString();
-     print_r2($msg);
+     self::print_err($msg);
   }
   //------------------------------------------------------------------
-  static function handler($errno, $errstr, $errfile, $errline)
+  public static function handler($errno, $errstr, $errfile, $errline)
   {
       // Para códigos de error que no están incluidos en 'error_reporting' (ejem.: se utiliza '@')
       if(!(error_reporting() & $errno)) {
          return;
       }
-      // print_r2("$errno,\n $errstr,\n $errfile,\n $errline");
+      // self::print_err("$errno,\n $errstr,\n $errfile,\n $errline");
 
       //--------------
       switch($errno) {
@@ -72,7 +72,7 @@ class MyErrorHandler
       //  - necesario para que se muestren los errores en pantalla
       //  - escribirá los errores en la ruta por defecto definida en 'error_log'
       if(self::$display_errors) {
-         print_r2(self::debug_string_backtrace());
+         self::print_err(self::debug_string_backtrace());
          return false;
       }
   }
@@ -99,7 +99,7 @@ class MyErrorHandler
       return $trace;
   }
   //------------------------------------------------------------------
-  static private function write_log($id_file, $errstr, $errfile, $errline)
+  private static function write_log($id_file, $errstr, $errfile, $errline)
   {
      //-------
      $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
@@ -115,6 +115,14 @@ class MyErrorHandler
 
      //-------
      file_put_contents($file_name, $msg, FILE_APPEND);
+  }
+  //------------------------------------------------------------------
+  private static function print_err($object)
+  {
+     echo '<pre style="font-size:13px;padding:8px;border:1px solid #de9595;background:wheat;text-align:left">'.
+             "<b>ErrorHandler</b><hr>\n".
+             print_r($object, true).
+          '</pre>';
   }
   //------------------------------------------------------------------
 }

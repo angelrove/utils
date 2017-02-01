@@ -10,6 +10,23 @@ namespace angelrove\utils;
 class FileContent
 {
   //------------------------------------------------------------------
+  public static function include_return($file, $params=array())
+  {
+     try {
+        ob_start();
+
+        if((include($file)) === false) {
+           throw new \Exception("File not found [$file]");
+        }
+     }
+     catch (\Exception $e) {
+        ob_get_clean();
+        throw $e;
+     }
+
+     return ob_get_clean();
+  }
+  //------------------------------------------------------------------
   public static function get_contents($file)
   {
      try {
@@ -36,33 +53,6 @@ class FileContent
      catch (\Exception $e) {
         throw $e;
      }
-  }
-  //------------------------------------------------------------------
-  /*
-   * Usage:
-   *  try {
-   *     $strFile = UtilsBasic::include_return($file);
-   *  }
-   *  catch (\Exception $e) {
-   *     throw new \Exception($e->getMessage());
-   *  }
-   *
-   */
-  public static function include_return($file)
-  {
-     try {
-        ob_start();
-
-        if((@include($file)) === false) {
-           throw new \Exception("File not found [$file]");
-        }
-     }
-     catch (\Exception $e) {
-        ob_get_clean();
-        throw $e;
-     }
-
-     return ob_get_clean();
   }
   //------------------------------------------------------------------
 }
