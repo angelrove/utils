@@ -17,14 +17,12 @@ class CssJsLoad
      'css' => 'media="none" onload="if(media!=\'all\')media=\'all\'"'
   );
 
-  static private $cache_enabled = true;
-
   static private $path_cache = '';
   static private $url_cache  = '';
 
   //---
-  static private $default_combined = true;
   static private $set_minify = false;
+  static private $cache_disabled = false;
 
   //---
   static private $async_files = array();
@@ -54,10 +52,14 @@ class CssJsLoad
      self::$url_cache  = $url_cache;
   }
   //---------------------------------------------------------------------
-  public static function isProd($isProd=false)
+  public static function set_minify($flag)
   {
-     // self::$default_combined = $isProd;
-     self::$set_minify = $isProd;
+     self::$set_minify = $flag;
+  }
+  //---------------------------------------------------------------------
+  public static function set_cache_disabled($flag)
+  {
+     self::$cache_disabled = $flag;
   }
   //---------------------------------------------------------------------
   // SETTERS
@@ -80,8 +82,17 @@ class CssJsLoad
   //---------------------------------------------------------------------
   public static function set($file, $async=false)
   {
+     // Not combined ---
+     if(self::is_http($file))
+     {
+        if(self::get_type($file) == 'js') {
+           self::set_js($file, $async);
+        } else {
+           self::set_css($file, $async);
+        }
+     }
      // Combined -------
-     if(self::$default_combined && !self::is_http($file))
+     else
      {
         if(!file_exists($file)) {
            // trigger_error("File not found: $file", E_USER_NOTICE);
@@ -93,16 +104,6 @@ class CssJsLoad
         } else {
            self::set_css_combined($file);
         }
-
-     }
-     // Not combined ---
-     else
-     {
-       if(self::get_type($file) == 'js') {
-          self::set_js($file, $async);
-       } else {
-          self::set_css($file, $async);
-       }
      }
   }
   //---------------------------------------------------------------------
@@ -181,13 +182,11 @@ class CssJsLoad
   //---------------------------------------------------------------------
   // GETTERS
   //---------------------------------------------------------------------
-  public static function get_css($version='1', $cache_enabled=true)
+  public static function get_css($version='1')
   {
     // called: get() ---
     self::$called_get_css = true;
     //------------------
-
-    self::$cache_enabled = $cache_enabled;
 
     self::get_css_js_files(self::$list_css_http, 'css');
     self::get_css_js_combined('css', $version);
@@ -274,7 +273,7 @@ class CssJsLoad
     // echo "DEBUG - CssJsLoad: cache file: $cache_file_path";
 
     /** Cache disabled **/
-    if(self::$cache_enabled === false)
+    if(self::$cache_disabled === true)
     {
        @unlink($cache_file_path);
     }
