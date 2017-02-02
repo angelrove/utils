@@ -198,7 +198,8 @@ class Db_mysql
     return $listRows;
   }
   //------
-  public static function getListNoId($query) {
+  public static function getListNoId($query)
+  {
     $listRows = array();
 
     $result = self::query($query);
@@ -259,7 +260,8 @@ class Db_mysql
   }
   */
   //------
-  public static function getListObjectNoId($query) {
+  public static function getListObjectNoId($query)
+  {
     $listRows = array();
 
     $result = self::query($query);
@@ -295,15 +297,18 @@ class Db_mysql
   //------------------------------------------------------------
   /* Info */
   //------------------------------------------------------------
-  public static function insert_id() {
+  public static function insert_id()
+  {
     return mysqli_insert_id(self::$db_dbconn);
   }
   //--------------
-  public static function affected_rows() {
+  public static function affected_rows()
+  {
     return mysqli_affected_rows(self::$db_dbconn);
   }
   //--------------
-  public static function getNumRows($sqlQuery) {
+  public static function getNumRows($sqlQuery)
+  {
     // Eliminar saltos de linea
     $sqlQuery2 = str_replace("\r", '',    $sqlQuery);
     $sqlQuery2 = str_replace("\n", '[#]', $sqlQuery2);
