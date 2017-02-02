@@ -21,8 +21,9 @@ class CssJsLoad
   static private $url_cache  = '';
 
   //---
-  static private $set_minify = false;
+  static private $set_minify = true;
   static private $cache_disabled = false;
+  static private $version = '1';
 
   //---
   static private $async_files = array();
@@ -60,6 +61,11 @@ class CssJsLoad
   public static function set_cache_disabled($flag)
   {
      self::$cache_disabled = $flag;
+  }
+  //---------------------------------------------------------------------
+  public static function set_version($version)
+  {
+     self::$version = $version;
   }
   //---------------------------------------------------------------------
   // SETTERS
@@ -182,26 +188,26 @@ class CssJsLoad
   //---------------------------------------------------------------------
   // GETTERS
   //---------------------------------------------------------------------
-  public static function get_css($version='1')
+  public static function get_css()
   {
     // called: get() ---
     self::$called_get_css = true;
     //------------------
 
     self::get_css_js_files(self::$list_css_http, 'css');
-    self::get_css_js_combined('css', $version);
+    self::get_css_js_combined('css');
     self::get_css_js_files(self::$list_css, 'css');
     self::get_css_js_files(self::$list_less, 'less');
   }
   //---------------------------------------------------------------------
-  public static function get_js($version='1')
+  public static function get_js()
   {
     // called: get() ---
     self::$called_get_js = true;
     //------------------
 
     self::get_css_js_files(self::$list_js, 'js');
-    self::get_css_js_combined('js', $version);
+    self::get_css_js_combined('js');
     self::get_js_scripts();
   }
   //---------------------------------------------------------------------
@@ -240,7 +246,7 @@ class CssJsLoad
   //---------------------------------------------------------------------
   // El nombre se genera con el md5 de la cadena resultante de concatenar todos los nombres de archivos y claves de scripts.
   // De esta forma se regenera automáticamente al añadir o eliminar un archivo o script.
-  private static function get_css_js_combined($ext, $version='1', $obfuscate=false)
+  private static function get_css_js_combined($ext, $obfuscate=false)
   {
     /** List files **/
     $listFiles    = array(); // Files
@@ -259,26 +265,24 @@ class CssJsLoad
     }
 
 
-    /** File cache **/
+    /** Cache file name **/
     // listKeys
     $listKeys = implode(';', $listFiles) . implode(';', array_keys($list_scripts));
     if(!$listKeys) {
        return;
     }
 
-    // File name
-    $cache_fileName  = $version.'_'.md5($listKeys).'.'.$ext;
-    $cache_file_path = self::$path_cache.'/'.$cache_fileName;
-    $cache_file_url  = self::$url_cache.'/'.$cache_fileName;
-    // echo "DEBUG - CssJsLoad: cache file: $cache_file_path";
+    // version + keys + ext
+    $cache_fileName  = self::$version.'_'.md5($listKeys).'.'.$ext;
 
-    /** Cache disabled **/
-    if(self::$cache_disabled === true)
-    {
+    /** Write cache **/
+    $cache_file_path = self::$path_cache.'/'.$cache_fileName;
+
+    // Cache disabled
+    if(self::$cache_disabled === true) {
        @unlink($cache_file_path);
     }
 
-    /** Write cache file **/
     if(!file_exists($cache_file_path))
     {
        // Read ---
@@ -297,6 +301,8 @@ class CssJsLoad
     }
 
     /** OUT **/
+    $cache_file_url = self::$url_cache.'/'.$cache_fileName;
+
     if($ext == 'js') {
        echo '<script type="text/javascript" src="'.$cache_file_url.'"></script>'.PHP_EOL ;
     } elseif($ext == 'css') {
