@@ -318,16 +318,18 @@ class CssJsLoad
   private static function read_files_combined($listFiles, $ext)
   {
     // Header ---------
-    $head = '/**'.PHP_EOL.
-            ' * lib: angelrove\utils\CssJsLoad'.PHP_EOL.
-            ' *'.PHP_EOL.
-            ' * url: '.$_SERVER['REQUEST_URI'].PHP_EOL.
-            ' * files:'.PHP_EOL.
-            ' '.implode(PHP_EOL.' ', $listFiles).PHP_EOL.
-            ' */'.PHP_EOL.PHP_EOL;
-
+    $header = '';
     if(self::$set_minify) {
-       $head = '/* lib: angelrove\utils\CssJsLoad - url: '.$_SERVER['REQUEST_URI'].' */'.PHP_EOL;
+       $header = '/* lib: angelrove\utils\CssJsLoad - url: '.$_SERVER['REQUEST_URI'].' */'.PHP_EOL;
+    }
+    else {
+       $header = '/**'.PHP_EOL.
+               ' * lib: angelrove\utils\CssJsLoad'.PHP_EOL.
+               ' *'.PHP_EOL.
+               ' * url: '.$_SERVER['REQUEST_URI'].PHP_EOL.
+               ' * files:'.PHP_EOL.
+               ' '.implode(PHP_EOL.' ', $listFiles).PHP_EOL.
+               ' */'.PHP_EOL.PHP_EOL;
     }
 
     // List files -----
@@ -359,7 +361,7 @@ class CssJsLoad
     }
     //-----------------
 
-    return $head.$strCombined;
+    return $header.$strCombined;
   }
   //---------------------------------------------------------------------
   private static function read_scripts($list_scripts, $combined=false)
@@ -451,14 +453,7 @@ class CssJsLoad
   //---------------------------------------------------------------------
   private static function minify_js($buffer)
   {
-     /* remove comments */
-     $buffer = preg_replace("/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/", "", $buffer);
-
-     /* remove tabs, spaces, newlines, etc. */
-     $buffer = str_replace(array("\r\n","\r","\t","\n",'  ','    ','     '), '', $buffer);
-
-     /* remove other spaces before/after ) */
-     $buffer = preg_replace(array('(( )+\))','(\)( )+)'), ')', $buffer);
+     // TODO...
 
      return $buffer;
   }
