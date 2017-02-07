@@ -38,7 +38,7 @@ class MyErrorHandler
      // self::print_err($e);
      $msg = $e->getMessage().' in '.$e->getFile().'('.$e->getLine().')'."\n".
             $e->getTraceASString();
-     self::print_err($msg);
+     self::print_err($msg, true);
   }
   //------------------------------------------------------------------
   public static function handler($errno, $errstr, $errfile, $errline)
@@ -117,10 +117,12 @@ class MyErrorHandler
      file_put_contents($file_name, $msg, FILE_APPEND);
   }
   //------------------------------------------------------------------
-  private static function print_err($object)
+  private static function print_err($object, $isException=false)
   {
-     echo '<pre style="font-size:13px;padding:8px;border:1px solid #de9595;background:wheat;text-align:left">'.
-             "<b>ErrorHandler</b><hr>\n".
+     $style = ($isException)? 'background:wheat;' : 'background:#eee;';
+
+     echo '<pre style="'.$style.' font-size:13px;padding:8px;border:1px solid #de9595;text-align:left">'.
+             "<b>ErrorHandler</b>\n-----------------\n".
              print_r($object, true).
           '</pre>';
   }
