@@ -217,7 +217,10 @@ class CssJsLoad
   {
      $strScripts = self::read_scripts(self::$list_scripts, false);
      if($strScripts) {
-        echo PHP_EOL .'<script type="text/javascript">'.PHP_EOL.$strScripts.'</script>'.PHP_EOL;
+        echo PHP_EOL.
+            '<!-- js_scripts -->'.PHP_EOL.
+            '<script>'.PHP_EOL.$strScripts.'</script>'.
+            PHP_EOL;
      }
   }
   //---------------------------------------------------------------------
