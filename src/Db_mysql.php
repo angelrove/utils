@@ -72,7 +72,7 @@ class Db_mysql
     global $CONFIG_APP;
 
     // DEBUG ----
-    if($CONFIG_APP['debug']['SQL']) {
+    if(DEBUG_SQL) {
        print_r2('DEBUG_SQL: '.$query);
     }
     //-----------
@@ -82,13 +82,20 @@ class Db_mysql
     }
 
     //-----------
-    $result = mysqli_query(self::$db_dbconn, $query);
-    if(!$result) {
-       $strErr = mysqli_error(self::$db_dbconn)." REMOTE_ADDR: $_SERVER[REMOTE_ADDR], REQUEST_URI: $_SERVER[REQUEST_URI]
-  Query: $query
-  ";
-       trigger_error($strErr, E_USER_WARNING); //exit();
+    try {
+       if(!$result = mysqli_query(self::$db_dbconn, $query)) {
+          $strErr = mysqli_error(self::$db_dbconn).":\n".$query;
+          throw new \Exception($strErr);
+       }
     }
+    catch (mysqli_sql_exception $e) {
+       throw $e;
+    }
+
+    // if(!$result = mysqli_query(self::$db_dbconn, $query)) {
+    //    $strErr = mysqli_error(self::$db_dbconn);
+    //    trigger_error($strErr, E_USER_WARNING);
+    // }
 
     return $result;
   }

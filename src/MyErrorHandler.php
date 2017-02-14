@@ -35,10 +35,16 @@ class MyErrorHandler
   //------------------------------------------------------------------
   public static function handler_excentions($e)
   {
-     // self::print_err($e);
-     $msg = $e->getMessage().' in '.$e->getFile().'('.$e->getLine().')'."\n".
-            $e->getTraceASString();
-     self::print_err($msg, true);
+     error_log($e);
+
+     if(self::$display_errors) {
+        $msg = $e->getMessage().' in '.$e->getFile().'('.$e->getLine().')'."\n".
+               $e->getTraceASString();
+        self::print_err($msg, true);
+     }
+     else {
+        throw $e;
+     }
   }
   //------------------------------------------------------------------
   public static function handler($errno, $errstr, $errfile, $errline)
