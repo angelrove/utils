@@ -54,10 +54,13 @@ class WebCrawler
        }
 
        // Load HTML ----
-       $dom = new DOMDocument('1.0');
+       $dom = new \DOMDocument('1.0');
        @$dom->loadHTMLFile($url);
 
-       $title = $dom->getElementsByTagName('title')->item(0)->nodeValue;
+       $title = '';
+       if($dom->getElementsByTagName('title')->item(0)) {
+          $title = $dom->getElementsByTagName('title')->item(0)->nodeValue;
+       }
 
        // SEO ----------
        if($this->set_scan_seo) {
@@ -94,16 +97,23 @@ class WebCrawler
      if(0 !== strpos($href, 'http')) {
          $path = '/' . ltrim($href, '/');
          if(extension_loaded('http')) {
-            $href = http_build_url($url, array('path' => $path));
+            $href = http_build_url($href, array('path' => $path));
          }
          else {
-             $parts = parse_url($url);
-             $href = $parts['scheme'] . '://';
+             $parts = parse_url($href);
+
+             if(isset($parts['scheme'])) {
+                $href = $parts['scheme'] . '://';
+             }
+
              if(isset($parts['user']) && isset($parts['pass'])) {
                 $href .= $parts['user'] . ':' . $parts['pass'] . '@';
              }
 
-             $href .= $parts['host'];
+             if(isset($parts['host'])) {
+                $href .= $parts['host'];
+             }
+
              if(isset($parts['port'])) {
                 $href .= ':' . $parts['port'];
              }
