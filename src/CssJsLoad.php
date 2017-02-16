@@ -73,16 +73,14 @@ class CssJsLoad
   public static function check_getjs_calls()
   {
      if(self::$called_get_js == true) {
-        // trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
-        throw new \Exception("Called 'set()' after 'get()'", E_USER_WARNING);
+        trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
      }
   }
   //---------------------------------------------------------------------
   public static function check_getcss_calls()
   {
      if(self::$called_get_css == true) {
-        // trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
-        throw new \Exception("Called 'set()' after 'get()'", E_USER_WARNING);
+        trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
      }
   }
   //---------------------------------------------------------------------
@@ -101,8 +99,8 @@ class CssJsLoad
      else
      {
         if(!file_exists($file)) {
-           // trigger_error("File not found: $file", E_USER_NOTICE);
-           throw new \Exception("File not found: $file", E_USER_WARNING);
+           trigger_error("File not found: $file", E_USER_NOTICE);
+           return;
         }
 
         if(self::get_type($file) == 'js') {
@@ -341,12 +339,12 @@ class CssJsLoad
     foreach ($listFiles as $file)
     {
        // Read file ---
-       // print_r2($file);
        try {
           $strFile = FileContent::include_return($file);
        }
        catch (\Exception $e) {
-          throw new \Exception($e->getMessage());
+          trigger_error("File not found: $file", E_USER_NOTICE);
+          continue;
        }
 
        // Minify ---

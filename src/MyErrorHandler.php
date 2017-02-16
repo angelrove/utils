@@ -127,8 +127,8 @@ class MyErrorHandler
   {
      $style = ($isException)? 'background:wheat;' : 'background:#eee;';
 
-     echo '</select><pre style="max-width:1100px;'.$style.' font-size:13px;padding:8px;border:1px solid #de9595;text-align:left">'.
-             "<b>ErrorHandler</b>\n-----------------\n".
+     echo '</select><pre style="max-width:1100px;max-height:400px;'.$style.' font-size:13px;padding:8px;border:1px solid #de9595;text-align:left">'.
+             "<b>ErrorHandler - debug backtrace</b>\n---------------------------------\n".
              print_r($object, true).
           '</pre>';
   }
