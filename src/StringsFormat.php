@@ -28,7 +28,7 @@ class StringsFormat
    static function str_getFriendly($str)
    {
       $str = trim(strtolower($str));
-      $str = self::str_parseEsChars($str);
+      $str = self::removeESchars($str); // Â¿?
       $str = self::str_clean($str);
 
       return $str;
@@ -36,43 +36,31 @@ class StringsFormat
    //------------------------------------------------------------------
    static function str_clean($string)
    {
-     $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-     $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+      // Replaces all spaces with hyphens
+      $string = str_replace(' ', '-', $string);
 
-     return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+      // Removes special chars
+      $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+
+      // To lower case
+      $string = strtolower($string);
+
+      // Replaces multiple hyphens with single one
+      return preg_replace('/-+/', '-', $string);
    }
    //------------------------------------------------------------------
-   static function removeSpecialChars($str)
+   static function removeESchars($str, $limit=0)
    {
      $str = trim($str);
      if(!$str) return '';
 
-     $charsES = array(' &','& ',',','"',"'",'´','/','%',"\\",'?','(',')','*','“','”',
-                      );
-
-     $chars   = array('&', '&', '', '', '', '', '', '', '',  '', '', '', '', '', '',
-                      );
-
-     // lower case
-     $str = strtolower($str);
-
-     // convertir caracteres
-     $str = str_ireplace($charsES, $chars, $str);
-     $str = str_replace('--', '', $str);
-
-     return $str;
-   }
-   //------------------------------------------------------------------
-   //------------------------------------------------------------------
-   static function str_parseEsChars($str)
-   {
-     $charsES = array('á', 'é', 'í', 'ó', 'ú',
-                      'Á', 'É', 'Í', 'Ó', 'Ú',
-                      'à', 'è', 'ì', 'ò', 'ù',
-                      'À', 'È', 'Ì', 'Ò', 'Ù',
-                      'â', 'ê', 'î', 'ô', 'û',
-                      'Â', 'Ê', 'Î', 'Ô', 'Û',
-                      'ñ', 'Ñ',
+     $charsES = array('Ã¡', 'Ã©', 'Ã­', 'Ã³', 'Ãº',
+                      'Ã', 'Ã‰', 'Ã', 'Ã“', 'Ãš',
+                      'Ã ', 'Ã¨', 'Ã¬', 'Ã²', 'Ã¹',
+                      'Ã€', 'Ãˆ', 'ÃŒ', 'Ã’', 'Ã™',
+                      'Ã¢', 'Ãª', 'Ã®', 'Ã´', 'Ã»',
+                      'Ã‚', 'ÃŠ', 'ÃŽ', 'Ã”', 'Ã›',
+                      'Ã±', 'Ã‘',
                       );
      $chars   = array('a', 'e', 'i', 'o', 'u',
                       'a', 'e', 'i', 'o', 'u',
@@ -83,46 +71,10 @@ class StringsFormat
                       'n', 'n',
                       );
 
-     return str_ireplace($charsES, $chars, $str);
-   }
-   //------------------------------------------------------------------
-   static function removeESchars($str, $limit=0)
-   {
-     $str = trim($str);
-     if(!$str) return '';
-
-     $charsES = array('á', 'é', 'í', 'ó', 'ú',
-                      'Á', 'É', 'Í', 'Ó', 'Ú',
-                      'à', 'è', 'ì', 'ò', 'ù',
-                      'À', 'È', 'Ì', 'Ò', 'Ù',
-                      'â', 'ê', 'î', 'ô', 'û',
-                      'Â', 'Ê', 'Î', 'Ô', 'Û',
-                      'ñ', 'Ñ', '&quot;',' - ',
-                      '&', '#', ';', ':', ',',
-                      '"', "'", '´', '/', '%',
-                      "\\",'¿', '?', '!', '¡',
-                      '.', '(', ')', '“', '‘','’',
-                      '”', '+', '[', ']', 'º','ª'
-                      );
-
-     $chars   = array('a', 'e', 'i', 'o', 'u',
-                      'a', 'e', 'i', 'o', 'u',
-                      'a', 'e', 'i', 'o', 'u',
-                      'a', 'e', 'i', 'o', 'u',
-                      'a', 'e', 'i', 'o', 'u',
-                      'a', 'e', 'i', 'o', 'u',
-                      'n', 'n', '',  '-',
-                      '-', '',  '',  '-', '',
-                      '',  '',  '',  '',  '-',
-                      '',  '',  '',  '',  '',
-                      '',  '',  '',  '',  '','',
-                      '',  '',  '',  '',  '',''
-                      );
-
      // lower case
      $str = strtolower($str);
 
-     // convertir caracteres
+     // reemplazar caracteres
      $str = str_ireplace($charsES, $chars, $str);
      $str = str_replace('--', '', $str);
 
@@ -139,12 +91,14 @@ class StringsFormat
    //------------------------------------------------------------------
    /* UTF8 */
    //------------------------------------------------------------------
-   function urlEnc_utf8($url) {
+   function urlEnc_utf8($url)
+   {
      $url = urlencode(utf8_encode($url));
      return $url;
    }
    //-------------------------------------------
-   function urlDec_utf8($url) {
+   function urlDec_utf8($url)
+   {
      $url = urldecode(utf8_decode($url));
      return $url;
    }
