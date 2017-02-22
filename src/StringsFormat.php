@@ -25,17 +25,12 @@ class StringsFormat
      return $res;
    }
    //------------------------------------------------------------------
-   static function str_getFriendly($str)
-   {
-      $str = trim(strtolower($str));
-      $str = self::removeESchars($str); // Â¿?
-      $str = self::str_clean($str);
-
-      return $str;
-   }
-   //------------------------------------------------------------------
    static function str_clean($string)
    {
+      $string = trim($string);
+
+      $string = self::parseESchars($string);
+
       // Replaces all spaces with hyphens
       $string = str_replace(' ', '-', $string);
 
@@ -49,42 +44,20 @@ class StringsFormat
       return preg_replace('/-+/', '-', $string);
    }
    //------------------------------------------------------------------
-   static function removeESchars($str, $limit=0)
+   static function parseESchars($str)
    {
-     $str = trim($str);
-     if(!$str) return '';
-
-     $charsES = array('Ã¡', 'Ã©', 'Ã­', 'Ã³', 'Ãº',
-                      'Ã', 'Ã‰', 'Ã', 'Ã“', 'Ãš',
-                      'Ã ', 'Ã¨', 'Ã¬', 'Ã²', 'Ã¹',
-                      'Ã€', 'Ãˆ', 'ÃŒ', 'Ã’', 'Ã™',
-                      'Ã¢', 'Ãª', 'Ã®', 'Ã´', 'Ã»',
-                      'Ã‚', 'ÃŠ', 'ÃŽ', 'Ã”', 'Ã›',
-                      'Ã±', 'Ã‘',
+     $charsES = array(
+                      'á', 'é', 'í', 'ó', 'ú',
+                      'Á', 'É', 'Í', 'Ó', 'Ú',
+                      'ñ','Ñ',
                       );
-     $chars   = array('a', 'e', 'i', 'o', 'u',
+     $chars   = array(
                       'a', 'e', 'i', 'o', 'u',
                       'a', 'e', 'i', 'o', 'u',
-                      'a', 'e', 'i', 'o', 'u',
-                      'a', 'e', 'i', 'o', 'u',
-                      'a', 'e', 'i', 'o', 'u',
-                      'n', 'n',
+                      'n','n',
                       );
 
-     // lower case
-     $str = strtolower($str);
-
-     // reemplazar caracteres
      $str = str_ireplace($charsES, $chars, $str);
-     $str = str_replace('--', '', $str);
-
-     $str = trim($str);
-     $str = str_replace(' ', '-', $str);
-
-     // size
-     if($limit > 0) {
-        $str = substr($str, 0, $limit);
-     }
 
      return $str;
    }
