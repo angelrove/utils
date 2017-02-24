@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @author José A. Romero Vegas <jangel.romero@gmail.com>
  * 2006
@@ -7,101 +7,100 @@
 
 namespace angelrove\utils;
 
-
-Class UtilsBasic
+class UtilsBasic
 {
-  //------------------------------------------------------------------
-  public static function parse_domain($host='')
-  {
-    if(!$host) {
-       $host = $_SERVER['HTTP_HOST'];
+    //------------------------------------------------------------------
+    public static function parse_domain($host = '')
+    {
+        if (!$host) {
+            $host = $_SERVER['HTTP_HOST'];
+        }
+
+        $parts     = explode('.', $host);
+        $num_parts = count($parts);
+
+        //----
+        $domain = $parts[$num_parts - 2] . '.' . $parts[$num_parts - 1];
+
+        //----
+        $subdomains = array_slice($parts, 0, $num_parts - 2);
+        $subdomain  = implode('.', $subdomains);
+
+        //----
+        return array(
+            'main'      => $domain,
+            'other'     => $subdomain,
+            'subdomain' => $subdomains,
+        );
+
     }
-
-    $parts = explode('.', $host);
-    $num_parts = count($parts);
-
-    //----
-    $domain = $parts[$num_parts-2].'.'.$parts[$num_parts-1];
-
-    //----
-    $subdomains = array_slice($parts, 0, $num_parts - 2 );
-    $subdomain = implode('.', $subdomains);
-
-    //----
-    return array(
-       'main'  => $domain,
-       'other' => $subdomain,
-       'subdomain' => $subdomains,
-    );
-
-  }
-  //------------------------------------------------------------------
-  // Arrays
-  //------------------------------------------------------------------
-  public static function array_is_assoc($arr)
-  {
-    return array_keys($arr) !== range(0, count($arr) - 1);
-  }
-  //------------------------------------------------------------------
-  // Introduce uno o más elementos al principio de la matriz asociativa
-  public static function array_unshift_assoc(&$arr, $key, $val)
-  {
-    $arr = array_reverse($arr, true);
-    $arr[$key] = $val;
-    $arr = array_reverse($arr, true);
-    return count($arr);
-  }
-  //------------------------------------------------------------------
-  // Concatena todas las cadenas de un array mediante un separador dado
-  public static function array_implode($sep, $listStr)
-  {
-    $strResult = '';
-
-    $c=0;
-    foreach($listStr AS $value) {
-       if(!$value) {
-          continue;
-       }
-
-       if($c > 0) {
-          $strResult .= $sep;
-       }
-       $strResult .= $value;
-
-       $c = 1;
+    //------------------------------------------------------------------
+    // Arrays
+    //------------------------------------------------------------------
+    public static function array_is_assoc($arr)
+    {
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
-
-    return $strResult;
-  }
-  //------------------------------------------------------------------
-  //------------------------------------------------------------------
-  /*
-   * Envía un email en formato HTML.
-   *   - Elimina la codificación UTF8.
-   *   - Ejemplo de $from = 'Galletas Fontaneda <gfontaneda@gmail.com>';
-   */
-  public static function sendEMail($from, $mailto, $bcc, $asunto, $body, $ReplyTo='')
-  {
-    $from   = utf8_decode($from);
-    $asunto = utf8_decode($asunto);
-    $body   = utf8_decode($body);
-
-    // Headers ----------
-    $header  = "From: $from\n";
-    $header .= "X-Mailer: PHP/". phpversion() ."\n";
-    $header .= "Mime-Version: 1.0\n";
-    $header .= "Content-Type: text/html; charset=iso-8859-1\n";
-
-    if($bcc) {
-       $header .= 'Bcc: '.$bcc ."\n";
+    //------------------------------------------------------------------
+    // Introduce uno o más elementos al principio de la matriz asociativa
+    public static function array_unshift_assoc(&$arr, $key, $val)
+    {
+        $arr       = array_reverse($arr, true);
+        $arr[$key] = $val;
+        $arr       = array_reverse($arr, true);
+        return count($arr);
     }
-    if($ReplyTo) {
-       $header .= 'Reply-To: '   .$ReplyTo."\n".
-                  'Return-Path: '.$ReplyTo."\n";
-    }
+    //------------------------------------------------------------------
+    // Concatena todas las cadenas de un array mediante un separador dado
+    public static function array_implode($sep, $listStr)
+    {
+        $strResult = '';
 
-    // Body -------------
-    $body = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+        $c = 0;
+        foreach ($listStr as $value) {
+            if (!$value) {
+                continue;
+            }
+
+            if ($c > 0) {
+                $strResult .= $sep;
+            }
+            $strResult .= $value;
+
+            $c = 1;
+        }
+
+        return $strResult;
+    }
+    //------------------------------------------------------------------
+    //------------------------------------------------------------------
+    /*
+     * Envía un email en formato HTML.
+     *   - Elimina la codificación UTF8.
+     *   - Ejemplo de $from = 'Galletas Fontaneda <gfontaneda@gmail.com>';
+     */
+    public static function sendEMail($from, $mailto, $bcc, $asunto, $body, $ReplyTo = '')
+    {
+        $from   = utf8_decode($from);
+        $asunto = utf8_decode($asunto);
+        $body   = utf8_decode($body);
+
+        // Headers ----------
+        $header = "From: $from\n";
+        $header .= "X-Mailer: PHP/" . phpversion() . "\n";
+        $header .= "Mime-Version: 1.0\n";
+        $header .= "Content-Type: text/html; charset=iso-8859-1\n";
+
+        if ($bcc) {
+            $header .= 'Bcc: ' . $bcc . "\n";
+        }
+        if ($ReplyTo) {
+            $header .= 'Reply-To: ' . $ReplyTo . "\n" .
+                'Return-Path: ' . $ReplyTo . "\n";
+        }
+
+        // Body -------------
+        $body = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
   <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -112,72 +111,69 @@ Class UtilsBasic
     </style>
   </head>
   <body>
-    '.$body.'
+    ' . $body . '
   </body>
   </html>';
 
-    // Mail -------------
-    if(IS_LOCALHOST) {
-       echo "
+        // Mail -------------
+        if (IS_LOCALHOST) {
+            echo "
          UtilsBasic::sendEMail() >> mail() >> IS_LOCALHOST<hr>
          Asunto: '$asunto'<br>
          Para: '$mailto'<br>
          <hr><br>
          $body
        ";
-       exit;
+            exit;
+        }
+
+        mail($mailto, $asunto, $body, $header);
     }
-
-    mail($mailto, $asunto, $body, $header);
-  }
-  //------------------------------------------------------------------
-  /*
-   * Obtener un CSV a partir de un array
-   */
-  public static function get_csv($listFields, $listRows, $SEP, $isDebug=false, $fileName='export.csv')
-  {
-    $LINE_RET = ($isDebug)? '<br>' : "\n";
-
-    //--------------
-    $header = '';
-    foreach($listFields as $f_name) {
-       $header .= $SEP.'"'.$f_name.'"';
-    }
-    $header = ltrim($header, $SEP);
-    $header .= $LINE_RET;
-
-    //--------------
-    $str_csv = '';
-    foreach($listRows as $row)
+    //------------------------------------------------------------------
+    /*
+     * Obtener un CSV a partir de un array
+     */
+    public static function get_csv($listFields, $listRows, $SEP, $isDebug = false, $fileName = 'export.csv')
     {
-      $line = '';
-      foreach($listFields as $f_name)
-      {
-         $value = trim($row[$f_name]);
+        $LINE_RET = ($isDebug) ? '<br>' : "\n";
 
-         if(!$isDebug) {
-            $value = addslashes($value);
-         }
-         $value = str_replace(array("\n", "\r"), ' ', $value);
+        //--------------
+        $header = '';
+        foreach ($listFields as $f_name) {
+            $header .= $SEP . '"' . $f_name . '"';
+        }
+        $header = ltrim($header, $SEP);
+        $header .= $LINE_RET;
 
-         $line .= $SEP.'"'.$value.'"';
-      }
-      $line = ltrim($line, $SEP);
-      $str_csv .= $line.$LINE_RET;
-    }
+        //--------------
+        $str_csv = '';
+        foreach ($listRows as $row) {
+            $line = '';
+            foreach ($listFields as $f_name) {
+                $value = trim($row[$f_name]);
 
-    // OUT ---------
-    if($isDebug) {
-       return $header.$str_csv;
+                if (!$isDebug) {
+                    $value = addslashes($value);
+                }
+                $value = str_replace(array("\n", "\r"), ' ', $value);
+
+                $line .= $SEP . '"' . $value . '"';
+            }
+            $line = ltrim($line, $SEP);
+            $str_csv .= $line . $LINE_RET;
+        }
+
+        // OUT ---------
+        if ($isDebug) {
+            return $header . $str_csv;
+        } else {
+            // header('Content-type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            // header("Pragma: no-cache");
+            // header("Expires: 0");
+            echo $header . $str_csv;
+            exit();
+        }
     }
-    else {
-       // header('Content-type: application/zip');
-       header('Content-Disposition: attachment; filename="'.$fileName.'"');
-       // header("Pragma: no-cache");
-       // header("Expires: 0");
-       echo $header.$str_csv;
-       exit();
-    }
-  }
-  //------------------------------------------------------------------
+    //------------------------------------------------------------------
 }
