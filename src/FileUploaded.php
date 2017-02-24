@@ -43,7 +43,7 @@ class FileUploaded
         global $CONFIG_APP;
 
         if (!$bbdd_file) {
-            return false;
+            return array();
         }
 
         if (isset($CONFIG_APP)) {
