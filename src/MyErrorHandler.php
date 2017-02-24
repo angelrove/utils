@@ -78,6 +78,7 @@ class MyErrorHandler
         if (self::$display_errors) {
             self::print_err(self::debug_string_backtrace());
             return false;
+        } else {
         }
     }
     //------------------------------------------------------------------
