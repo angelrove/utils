@@ -120,7 +120,13 @@ class ImageTransform
      *  $cropY: bottom, top,  center
      *  Ejem.: cropImage('./app/cropImage', 'prueba.jpg', 0, 400, true, 'center', 'center');
      */
-    public static function crop($img_dir, $img_name, $width, $height, $outputBuffer = true, $cropX = 'right', $cropY = 'bottom')
+    public static function crop($img_dir,
+                                $img_name,
+                                $width,
+                                $height,
+                                $outputBuffer = true,
+                                $cropX = 'right',
+                                $cropY = 'bottom')
     {
         /** Datos **/
         $ruta = $img_dir . '/' . $img_name;

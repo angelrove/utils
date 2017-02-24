@@ -37,7 +37,12 @@ class FileSystem
     //--------------------------------------------------------------------
     /* Renombrar archivos */
     //--------------------------------------------------------------------
-    public static function substrReplace($ruta, $recursive, $testing, $cadena_sustituta, $comienzo, $longitud)
+    public static function substrReplace($ruta,
+                                         $recursive,
+                                         $testing,
+                                         $cadena_sustituta,
+                                         $comienzo,
+                                         $longitud)
     {
         $listFiles = self::getFiles($ruta, $recursive);
         foreach ($listFiles as $file) {
@@ -123,7 +128,7 @@ class FileSystem
         return $ret;
     }
     //--------------------------------------------------------------------
-    private static function getFiles2($lenInicio, $dir, $recursive)
+    private static function getFiles2($lenInicio, $dir, $isRecursive)
     {
         // print_r2($dir);
 
@@ -145,9 +150,9 @@ class FileSystem
 
             $rutaFile = $dir . '/' . $file;
 
-            if (is_dir($rutaFile) && $recursive) {
+            if (is_dir($rutaFile) && $isRecursive) {
                 // Subdirectorio
-                $files = array_merge($files, self::getFiles2($lenInicio, $rutaFile, $recursive));
+                $files = array_merge($files, self::getFiles2($lenInicio, $rutaFile, $isRecursive));
             } else {
                 //$dirX = substr($dir."/", $lenInicio+1);
                 $dirX = $dir . "/";
@@ -161,13 +166,13 @@ class FileSystem
         return $files;
     }
     //--------------------------------------------------------------------
-    public static function getDirs($dir, $recursive = false)
+    public static function getDirs($dir, $isRecursive = false)
     {
-        $ret = self::getDirs2(strlen($dir), $dir, $recursive);
+        $ret = self::getDirs2(strlen($dir), $dir, $isRecursive);
         return $ret;
     }
 
-    private static function getDirs2($lenInicio, $dir, $recursive = false)
+    private static function getDirs2($lenInicio, $dir, $isRecursive = false)
     {
         if (!is_dir($dir)) {
             die("\n" . 'Ruta incorrecta: "' . $dir . '"');
@@ -188,8 +193,8 @@ class FileSystem
                 $res[] = $dirX . '/';
 
                 // Subdirectorio
-                if ($recursive) {
-                    $res = array_merge($res, self::getDirs2($lenInicio, $rutaFile, $recursive));
+                if ($isRecursive) {
+                    $res = array_merge($res, self::getDirs2($lenInicio, $rutaFile, $isRecursive));
                 }
             }
 

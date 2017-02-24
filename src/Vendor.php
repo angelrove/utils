@@ -20,7 +20,7 @@ class Vendor
     //    self::$path_vendor = $path;
     // }
     //-------------------------------------------------
-    public static function conf($key, $path, $files)
+    public static function conf($key, $path, array $files)
     {
         self::$paths[$key]     = $path;
         self::$resources[$key] = $files;

@@ -37,7 +37,7 @@ class UtilsBasic
     //------------------------------------------------------------------
     // Arrays
     //------------------------------------------------------------------
-    public static function array_is_assoc($arr)
+    public static function array_is_assoc(array $arr)
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
@@ -52,7 +52,7 @@ class UtilsBasic
     }
     //------------------------------------------------------------------
     // Concatena todas las cadenas de un array mediante un separador dado
-    public static function array_implode($sep, $listStr)
+    public static function array_implode($sep, array $listStr)
     {
         $strResult = '';
 
@@ -133,7 +133,11 @@ class UtilsBasic
     /*
      * Obtener un CSV a partir de un array
      */
-    public static function get_csv($listFields, $listRows, $SEP, $isDebug = false, $fileName = 'export.csv')
+    public static function get_csv(array $listFields,
+                                   array $listRows,
+                                   $SEP,
+                                   $isDebug = false,
+                                   $fileName = 'export.csv')
     {
         $LINE_RET = ($isDebug) ? '<br>' : "\n";
 

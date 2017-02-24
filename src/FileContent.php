@@ -9,7 +9,7 @@ namespace angelrove\utils;
 class FileContent
 {
     //------------------------------------------------------------------
-    public static function include_return($file, $params = array())
+    public static function include_return($file, array $params = array())
     {
         try {
             ob_start();

@@ -113,7 +113,12 @@ class FileUploaded
     }
     //----------------------------------------------------------
     // $type: '', 'lightbox'
-    public static function getHtmlImg($datos, $type = '', $alt = '', $class = '', $op_nofoto = false, $link = '')
+    public static function getHtmlImg(array $datos,
+                                      $type = '',
+                                      $alt = '',
+                                      $class = '',
+                                      $op_nofoto = false,
+                                      $link = '')
     {
         $img = '';
 

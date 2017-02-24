@@ -217,7 +217,7 @@ class CssJsLoad
         }
     }
     //---------------------------------------------------------------------
-    private static function get_css_js_files($listFiles, $ext)
+    private static function get_css_js_files(array $listFiles, $ext)
     {
         $strCssJs = '';
 
@@ -303,7 +303,7 @@ class CssJsLoad
     //---------------------------------------------------------------------
     // READ CONTENT
     //---------------------------------------------------------------------
-    private static function read_files_combined($listFiles, $ext)
+    private static function read_files_combined(array $listFiles, $ext)
     {
         // Header ---------
         $header = '';
@@ -349,7 +349,7 @@ class CssJsLoad
         return $header . $strCombined;
     }
     //---------------------------------------------------------------------
-    private static function read_scripts($list_scripts, $combined = false)
+    private static function read_scripts(array $list_scripts, $combined = false)
     {
         $strScripts = '';
 
@@ -378,7 +378,7 @@ class CssJsLoad
         return '';
     }
     //---------------------------------------------------------------------
-    private static function read_css_blocks($list_css_blocks)
+    private static function read_css_blocks(array $list_css_blocks)
     {
         $strBlocks = '';
         foreach ($list_css_blocks as $key => $block) {
