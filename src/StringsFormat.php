@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * StringsFormat
  */
 
 namespace angelrove\utils;
