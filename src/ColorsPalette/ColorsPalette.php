@@ -59,24 +59,24 @@ class ColorsPalette extends CSS_Color
     <style>
     .lala { display:inline-block; text-align:center; padding: 9px 13px; border:1px solid #ddd; }
     </style>
-    <?
+    <?php
 
         echo "<hr>background ";
         foreach ($listKeys as $key) {
-            ?><div class="lala" style="background:#<?=$this->bg[$key]?>; color:#<?=$this->fg[$key]?>"><?=$key?></div><?
+            ?><div class="lala" style="background:#<?=$this->bg[$key]?>; color:#<?=$this->fg[$key]?>"><?=$key?></div><?php
         }
-        ?><br><?
+        ?><br><?php
 
         echo "foreground &nbsp;";
         foreach ($listKeys as $key) {
-            ?><div class="lala" style="background:#<?=$this->fg[$key]?>; color:#<?=$this->bg[$key]?>"><?=$key?></div><?
+            ?><div class="lala" style="background:#<?=$this->fg[$key]?>; color:#<?=$this->bg[$key]?>"><?=$key?></div><?php
         }
-        ?><br><?
+        ?><br><?php
 
         echo "basic &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;";
         $listKeys = $this->get_basic_palette();
         foreach ($listKeys as $key => $color) {
-            ?><div class="lala" style="background:<?=$color?>; color:#fff"><?=$key?></div><?
+            ?><div class="lala" style="background:<?=$color?>; color:#fff"><?=$key?></div><?php
         }
     }
     //----------------------------------------------------------------

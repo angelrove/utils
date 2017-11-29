@@ -72,7 +72,7 @@ class ColorsPalette
         ?>
       <table width="300px" border="1">
       <tr><td>Percent</td><td>Color1</td><td>Color2</td><td>Color3</td></tr>
-      <?
+      <?php
         $example = array(0, 15, 30, 50, 70, 85, 100);
         foreach ($example as $x) {
             $color = $this->percent2Color($x, 240);
@@ -83,7 +83,7 @@ class ColorsPalette
                 "<td style='background-color:#" . $color[2] . "'>$color[2]</td>" .
                 "<tr>";
         }
-        ?></table><?
+        ?></table><?php
 
     }
     //----------------------------------------------------------------
