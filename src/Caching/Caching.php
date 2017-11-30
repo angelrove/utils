@@ -8,7 +8,7 @@
  *   $caching = new Caching($cacheDir, $cacheTime);
  *   $caching->beginCaching();
  *
- *   // Para eliminar archivos de caché
+ *   // Delete cache files
  *   //$caching = new CachingDel('../_uploads/cache/directorio_prov/');
  *   //$caching->beginDeleteCaching();
  *   ...
