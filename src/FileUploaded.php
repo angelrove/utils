@@ -131,7 +131,7 @@ class FileUploaded
             if ($op_nofoto) {
                 $img =
                     '<div class="htm_img img-thumbnail ' . $class . '" style="text-align:center">' .
-                    '<i class="fa-nofoto fa fa-picture-o fa-5x" aria-hidden="true"></i>' .
+                    '<i class="fa-nofoto fas fa-picture fa-5x" aria-hidden="true"></i>' .
                     '</div>';
             }
             return $img;
