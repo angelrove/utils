@@ -13,7 +13,7 @@ class UtilsBasic
     /*
      * From https://stackoverflow.com/questions/9802788/call-a-rest-api-in-php
      */
-    function callAPI($method, $url, $data = false, $headers = false)
+    public static function callAPI($method, $url, $data = false, $headers = false)
     {
         $curl = curl_init();
 
