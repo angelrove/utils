@@ -8,109 +8,96 @@
 namespace angelrove\utils\Images;
 
 use angelrove\utils\FileSystem;
+// use angelrove\membrillo2\DebugTrace;
 
 class ImageTransform
 {
     //---------------------------------------------------------------------
     /**
-     * Redimensionar todas las imagenes JPEG de un directorio (no recursivo)
+     * <img src="scale.php?image='.$file."/>
      */
-    public static function thumbsJpegDir($ruta, $thumb_altura, $thumb_prefijo = '')
+    public static function resizeOnFly($img_dir, $img_name, $width)
     {
-        $ruta .= '/';
-        $listFiles = FileSystem::getFiles($ruta, false);
+        self::resize($img_dir, $img_name, $width, '', '', true);
+    }
+    //---------------------------------------------------------------------
+    /**
+     * Redimensionar todas las imágenes de un directorio (no recursivo)
+     */
+    public static function resizeOnFolder($folder, $thumb_altura, $th_prefijo = '')
+    {
+        $folder .= '/';
+        $listFiles = FileSystem::getFiles($folder, false);
         //print_r2($listFiles);
+
         $strResult = '';
         foreach ($listFiles as $file) {
             $strResult .= "\n -> $file[name] \n";
-            self::thumbsJpeg($file['ruta'], $file['name'], $thumb_altura, $thumb_prefijo);
+            self::resize($file['ruta'], $file['name'], $thumb_altura, $th_prefijo);
         }
 
         return $strResult;
     }
     //---------------------------------------------------------------------
-    /**
-     * Redimensionar una imagen
-     */
-    public static function thumbsJpeg($img_dir, $img_name, $thumb_anchura, $thumb_altura = '', $thumb_prefijo = '')
+    public static function resize($img_dir, $img_name, $th_width, $th_height='', $th_prefijo='', $toScreen=false)
     {
-        $trazas_obj = 'ImageTransform.inc';
+        // $trazas_obj = 'ImageTransform.php';
 
-        if (!$img_name) {
-            return;
-        }
-        // no hace nada
-
-        if (!$thumb_prefijo && $thumb_prefijo != 'NADA') {
-            $thumb_prefijo = 'th_';
-        } else {
-            $thumb_prefijo = '';
-        }
-
-        /** Datos imagen **/
+        // Image data ----
         $img = self::getDatosImg($img_dir, $img_name);
-        //DebugTrace::out($trazas_obj.': $img', $img);
+        // DebugTrace::out($trazas_obj.': $img', $img);
 
-        // Siempre debería crear el Thumbnail, ya que sino luego no se encuentra el 'th_'
-        /*
-        if($thumb_altura) {
-        if($img['height'] <= $thumb_altura) return; // no hace nada
-        }
-        else {
-        if($img['width'] <= $thumb_anchura) return; // no hace nada
-        }
-         */
+        // Path ----
+        $thName  = $th_prefijo . $img['nombre'];
+        $th_ruta = $img['dir'] . '/' . $thName;
 
-        /** Thumbnail **/
-        // Ruta
-        $thName     = $thumb_prefijo . $img['nombre'];
-        $thumb_ruta = $img['dir'] . '/' . $thName;
-
-        if ($thumb_altura) {
-            // Anchura
-            $ratio         = ($img['height'] / $thumb_altura);
-            $thumb_anchura = round($img['width'] / $ratio);
+        // Calculate resized ratio ----
+        if ($th_height) {
+            // width
+            $ratio    = ($img['height'] / $th_height);
+            $th_width = round($img['width'] / $ratio);
         } else {
-            // Altura
-            $ratio        = ($img['width'] / $thumb_anchura);
-            $thumb_altura = round($img['height'] / $ratio);
+            // height
+            $ratio     = ($img['width'] / $th_width);
+            $th_height = round($img['height'] / $ratio);
         }
 
-        // Imagen ----
-        $thumb = imagecreatetruecolor($thumb_anchura, $thumb_altura);
+        // Create image ----
+        $output = imagecreatetruecolor($th_width, $th_height);
 
-        // background
-        $white = imagecolorallocate($thumb, 255, 255, 255);
-        imagefill($thumb, 0, 0, $white);
+        // white background
+        // imagefill($output, 0, 0, imagecolorallocate($output, 255, 255, 255));
 
-        //---
-        imagecopyresampled($thumb, $img['image'],
-            0, 0,
-            0, 0,
-            $thumb_anchura, $thumb_altura,
-            $img['width'], $img['height']);
+        imagecopyresampled($output, $img['image'], 0, 0, 0, 0, $th_width, $th_height, $img['width'], $img['height']);
 
-        // Guardar
-        if (file_exists($thumb_ruta)) {
-            unlink($thumb_ruta);
+        // Output to screen ----
+        if ($toScreen) {
+            header('Content-Type: '.$img['mime']);
+            header('Content-Disposition: filename=' . $img_name);
+
+            $seconds_to_cache = (3600 * 24) * 365; // 1 year
+            header("Pragma: cache");
+            header("Expires: ".gmdate("D, d M Y H:i:s", time() + $seconds_to_cache) . " GMT");
+            header("Cache-Control: max-age=$seconds_to_cache");
+
+            $th_ruta = NULL;
         }
 
+        // Save/Print image ----
         switch ($img['type']) {
             case 'JPEG':
-                imagejpeg($thumb, $thumb_ruta);
+                imagejpeg($output, $th_ruta);
                 break;
             case 'GIF':
-                imagegif($thumb, $thumb_ruta);
+                imagegif($output, $th_ruta);
                 break;
             case 'PNG':
-                imagepng($thumb, $thumb_ruta);
+                imagepng($output, $th_ruta);
                 break;
         }
 
-        $traza = "ImageTransform::thumbsJpeg: imagejpeg: thumb_ruta = '$thumb_ruta';";
-        //DebugTrace::out($trazas_obj, $traza);
-
-        return true;
+        // $traza = "resize(): th_ruta = '$th_ruta';";
+        // DebugTrace::out($trazas_obj, $traza);
     }
     //----------------------------------------------------------------
     /*
@@ -224,12 +211,19 @@ class ImageTransform
 
         $datosImg = getimagesize($ruta);
         if (!$datosImg) {
+            throw new \Exception();
+        }
+        // print_r2($datosImg);exit();
+
+        if (!$datosImg) {
             echo ("ImageTransform: ERROR: No se puede abrir la imagen [$ruta]<br>");
             return false;
         }
+
         $datos['width']  = $datosImg[0];
         $datos['height'] = $datosImg[1];
         $datos['type']   = $datosImg[2];
+        $datos['mime']   = $datosImg['mime'];
 
         //$datos['image'] = @imagecreatefromjpeg($ruta) or die("No se puede abrir la imagen JPEG [$ruta]");
         switch ($datos['type']) {
@@ -250,7 +244,6 @@ class ImageTransform
                 break;
         }
 
-        //print_r2($datos);
         return $datos;
     }
     //---------------------------------------------------------------------
