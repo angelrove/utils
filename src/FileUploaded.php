@@ -92,6 +92,8 @@ class FileUploaded
     //--------------------------------------------------------------
     public static function getInfo2($bbdd_file)
     {
+        global $CONFIG_APP;
+
         if (!$bbdd_file) {
             return array();
         }
@@ -106,8 +108,10 @@ class FileUploaded
         $file['dir'] .= '/';
 
         /** Ruta (URL) **/
-        $file['ruta']    = $file['dir'] . $file['name'];
+        $file['ruta'] = $file['dir'] . $file['name'];
         $file['ruta_th'] = $file['dir'] . 'th_' . $file['name'];
+
+        $file['ruta_completa'] = $CONFIG_APP['url_uploads'].$file['ruta'];
 
         return $file;
     }
