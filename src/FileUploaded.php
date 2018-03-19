@@ -93,7 +93,7 @@ class FileUploaded
     public static function getInfo2($bbdd_file)
     {
         if (!$bbdd_file) {
-            return false;
+            return array();
         }
 
         $file        = array();
@@ -122,29 +122,29 @@ class FileUploaded
     {
         $img = '';
 
-        //-------
-        $alt = ($alt) ? htmlentities($alt) : $datos['name'];
-
         //---------------
         // no foto
         if (!$datos) {
             if ($op_nofoto) {
-                $img =
-                    '<div class="htm_img img-thumbnail ' . $class . '" style="text-align:center">' .
-                    '<i class="fa-nofoto fas fa-picture fa-5x" aria-hidden="true"></i>' .
-                    '</div>';
+                $img = '<i class="far fa-image fa-5x" aria-hidden="true"></i>';
             }
             return $img;
         }
         //---------------
+
+        // alt
+        $alt = ($alt) ? htmlentities($alt) : $datos['name'];
+
         // lightbox
         if ($type == 'lightbox') {
             $img =
-                '<a class="htm_img img-thumbnail ' . $class . '" href="' . $datos['ruta_completa'] . '" data-lightbox="file_img">' .
-                '<img class="img-responsive"' .
-                'src="' . $datos['ruta_completa_th'] . '"' .
-                'onerror="this.onerror=null;this.src=\'' . $datos['ruta_completa'] . '\'"' .
-                'alt="' . $alt . '">' .
+                '<a class="htm_img img-thumbnail ' . $class . '"'.
+                    'href="' . $datos['ruta_completa'] . '"'.
+                    'data-lightbox="file_img">' .
+                  '<img class="img-responsive"' .
+                       'src="' . $datos['ruta_completa_th'] . '"' .
+                       'onerror="this.onerror=null;this.src=\'' . $datos['ruta_completa'] . '\'"' .
+                       'alt="' . $alt . '">' .
                 '</a>';
         }
         //---------------
