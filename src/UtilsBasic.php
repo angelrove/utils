@@ -54,6 +54,9 @@ class UtilsBasic
 
         //-----
         $result = curl_exec($curl);
+        if ($result === FALSE) {
+            echo "cURL Error: " . curl_error($curl);
+        }
         curl_close($curl);
 
         return $result;
