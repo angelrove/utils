@@ -104,14 +104,12 @@ class FileUploaded
         /** Params **/
         $file['name'] = $params_foto[0];
         $file['dir']  = (isset($params_foto[5])) ? $params_foto[5] : '';
-
         $file['dir'] .= '/';
 
         /** Ruta (URL) **/
-        $file['ruta'] = $file['dir'] . $file['name'];
-        $file['ruta_th'] = $file['dir'] . 'th_' . $file['name'];
-
-        $file['ruta_completa'] = $CONFIG_APP['url_uploads'].$file['ruta'];
+        $file['ruta']    = $file['dir'] . $file['name'];
+        $file['ruta_th'] = $CONFIG_APP['url_uploads'].'/'.$file['dir'] . 'th_' . $file['name'];
+        $file['ruta_completa'] = $CONFIG_APP['url_uploads'].'/'.$file['ruta'];
 
         return $file;
     }
