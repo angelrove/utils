@@ -10,86 +10,88 @@ namespace angelrove\utils;
 class WebCrawler
 {
     private $url = '';
-    private $depth;
-
-    private $scan_domain  = 'all';
-    private $set_scan_seo = false;
 
     //-------------------------------------------------------
-    public function __construct($url, $depth = 5)
+    public function __construct($url)
     {
-        $this->url   = $url;
-        $this->depth = $depth;
+        $this->url = $url;
     }
     //-------------------------------------------------------
-    // Seters
-    //-------------------------------------------------------
-    public function set_scan_seo($set_scan_seo)
-    {
-        $this->set_scan_seo = $set_scan_seo;
-    }
-    //-------------------------------------------------------
-    // all, main, others
-    public function set_scan_domain($scan_domain)
-    {
-        $this->scan_domain = $scan_domain;
-    }
-    //-------------------------------------------------------
-    // Geters
-    //-------------------------------------------------------
-    public function crawl()
-    {
-        return $this->crawl_page($this->url, $this->depth);
-    }
-    //-------------------------------------------------------
-    // PRIVATE
-    //-------------------------------------------------------
-    // http://stackoverflow.com/questions/2313107/how-do-i-make-a-simple-crawler-in-php
-    private function crawl_page($url, $depth = 5)
+    /*
+     * http://stackoverflow.com/questions/2313107/how-do-i-make-a-simple-crawler-in-php
+     * $scan_domain: [all, main, others]
+     */
+    public function crawl_links($depth=5, $scan_domain='all', $scan_seo=false)
     {
         static $seen = array();
-        if (isset($seen[$url]) || $depth === 0) {
+        if (isset($seen[$this->url]) || $depth === 0) {
             return;
         }
 
         // Load HTML ----
         $dom = new \DOMDocument('1.0');
-        @$dom->loadHTMLFile($url);
+        @$dom->loadHTMLFile($this->url);
 
+        // SEO ----------
         $title = '';
         if ($dom->getElementsByTagName('title')->item(0)) {
             $title = $dom->getElementsByTagName('title')->item(0)->nodeValue;
         }
 
-        // SEO ----------
-        if ($this->set_scan_seo) {
+        if ($scan_seo) {
             if (!$title) {
                 return;
             }
         }
 
         // Datos --------
-        $seen[$url] = array('url' => $url,
-            'title'                   => $title,
+        $seen[$this->url] = array(
+            'url'   => $this->url,
+            'title' => $title,
         );
 
         // Get links ----
         $anchors = $dom->getElementsByTagName('a');
-        foreach ($anchors as $element) {
+        foreach ($anchors as $element)
+        {
             $href = $this->parse_href($element->getAttribute('href'));
 
             // Filtrar dominios
-            if ($this->parse_domain($href) === false) {
+            if ($this->parse_domain($href, $scan_domain) === false) {
                 continue;
             }
 
-            $this->crawl_page($href, $depth - 1);
+            // Recursive
+            $this->crawl_links($href, $depth - 1);
         }
 
-        // echo "URL:",$url,PHP_EOL,"CONTENT:",PHP_EOL,$dom->saveHTML(),PHP_EOL;
+        // echo "URL:",$this->url,PHP_EOL,"CONTENT:",PHP_EOL,$dom->saveHTML(),PHP_EOL;
         return $seen;
     }
     //-------------------------------------------------------
+    static public function getElementContent($url, $tag, $attribute, $attr_value)
+    {
+        // Load HTML ----
+        $dom = new \DOMDocument('1.0');
+        @$dom->loadHTMLFile($url);
+        // $dom->formatOutput = true;
+
+        // Elements -----
+        $elements = $dom->getElementsByTagName($tag);
+        foreach ($elements as $element)
+        {
+            $value = $element->getAttribute($attribute);
+
+            if ($value && ($value == $attr_value)) {
+                // $content = $element->nodeValue;
+                $content = $dom->saveXML($element);
+
+                return $content;
+            }
+        }
+    }
+    //-------------------------------------------------------
+    // PRIVATE
     //-------------------------------------------------------
     private function parse_href($href)
     {
@@ -122,11 +124,11 @@ class WebCrawler
         return $href;
     }
     //-------------------------------------------------------
-    private function parse_domain($url)
+    private function parse_domain($url, $scan_domain)
     {
         $find_domain = (strpos($url, $this->url) === 0) ? true : false;
 
-        switch ($this->scan_domain) {
+        switch ($scan_domain) {
             case 'main':
                 if ($find_domain) {
                     return true;
