@@ -283,28 +283,53 @@ class Db_mysql
 
         return $listRows;
     }
+    //---------------------------------------------------------
+    public static function duplicate_row($table, $sql_update, $id)
+    {
+        // Temporary table ---
+        Db_mysql::query("CREATE TEMPORARY TABLE tmp SELECT * from $table WHERE id='$id'");
+        Db_mysql::query("ALTER TABLE tmp drop id");
+
+        // Update data ---
+        if ($sql_update) {
+            Db_mysql::query("UPDATE tmp SET $sql_update");
+        }
+
+        // Insert ---
+        Db_mysql::query("INSERT INTO $table SELECT 0,tmp.* FROM tmp");
+        $new_id = Db_mysql::insert_id();
+        Db_mysql::query("DROP TEMPORARY TABLE tmp");
+
+        return $new_id;
+    }
     //------------------------------------------------------------
     // sqlFiltro: "AND column_name<>'fecha' AND column_name<>'id_dominio'"
     // Ejem.: self::duplicateRow('noticias_modulos', $id, "", 'id_web', $id_web);
-    public static function duplicateRow($table, $id, $sqlFiltro, $replace_field1 = '', $replace_field_value1 = '', $replace_field2 = '', $replace_field_value2 = '')
-    {
-        $sqlListCampos = "SELECT column_name AS nombre FROM information_schema.columns WHERE table_name='$table' AND column_name<>'id' $sqlFiltro";
-        $listCampos    = self::getListOneField($sqlListCampos, true);
+    // public static function duplicateRow($table,
+    //                                     $id,
+    //                                     $sqlFiltro,
+    //                                     $replace_field1 = '',
+    //                                     $replace_field_value1 = '',
+    //                                     $replace_field2 = '',
+    //                                     $replace_field_value2 = '')
+    // {
+    //     $sqlListCampos = "SELECT column_name AS nombre FROM information_schema.columns WHERE table_name='$table' AND column_name<>'id' $sqlFiltro";
+    //     $listCampos    = self::getListOneField($sqlListCampos, true);
 
-        $sql_campos = implode(",", $listCampos);
+    //     $sql_campos = implode(",", $listCampos);
 
-        $sql_values = $sql_campos;
+    //     $sql_values = $sql_campos;
 
-        $sql_values = str_ireplace($replace_field1, "'$replace_field_value1'", $sql_values);
-        $sql_values = str_ireplace($replace_field2, "'$replace_field_value2'", $sql_values);
+    //     $sql_values = str_ireplace($replace_field1, "'$replace_field_value1'", $sql_values);
+    //     $sql_values = str_ireplace($replace_field2, "'$replace_field_value2'", $sql_values);
 
-        //$prefig_debug = '_copy';
-        $sql = "INSERT INTO $table" . $prefig_debug . "($sql_campos) \nSELECT $sql_values FROM $table WHERE id='$id'";
-        //print_r2($sql);
+    //     //$prefig_debug = '_copy';
+    //     $sql = "INSERT INTO $table" . $prefig_debug . "($sql_campos) \nSELECT $sql_values FROM $table WHERE id='$id'";
+    //     //print_r2($sql);
 
-        self::query($sql);
-        return self::insert_id();
-    }
+    //     self::query($sql);
+    //     return self::insert_id();
+    // }
     //------------------------------------------------------------
     /* Info */
     //------------------------------------------------------------
