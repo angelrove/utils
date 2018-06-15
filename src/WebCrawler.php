@@ -69,7 +69,7 @@ class WebCrawler
         return $seen;
     }
     //-------------------------------------------------------
-    static public function getElementContent($url, $tag, $attribute, $attr_value)
+    static public function getElementContent($url, $tag, $attribute, $attr_value, $flagType=false)
     {
         // Load HTML ----
         $dom = new \DOMDocument('1.0');
@@ -83,8 +83,11 @@ class WebCrawler
             $value = $element->getAttribute($attribute);
 
             if ($value && ($value == $attr_value)) {
-                // $content = $element->nodeValue;
-                $content = $dom->saveXML($element);
+                if ($flagType == 'xml') {
+                    $content = $dom->saveXML($element);
+                } else {
+                    $content = $element->nodeValue;
+                }
 
                 return $content;
             }
