@@ -32,8 +32,9 @@ class UtilsBasic
                 break;
 
             default:
-                if ($data)
+                if ($data) {
                     $url = sprintf("%s?%s", $url, http_build_query($data));
+                }
         }
 
         // Custom headers:

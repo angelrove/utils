@@ -211,7 +211,7 @@ class ImageTransform
 
         $datosImg = getimagesize($ruta);
         if (!$datosImg) {
-            throw new \Exception();
+            throw new \Exception("Error al obtener datos de la imagen: '$ruta'");
         }
         // print_r2($datosImg);exit();
 
