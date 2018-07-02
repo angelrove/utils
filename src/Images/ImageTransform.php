@@ -206,6 +206,10 @@ class ImageTransform
     {
         $ruta = $img_dir . '/' . $img_name;
 
+        if (!file_exists($ruta)) {
+            throw new \Exception("Error: la ruta del archivo no existe: '$ruta'");
+        }
+
         $datos['dir']    = $img_dir;
         $datos['nombre'] = $img_name;
 
