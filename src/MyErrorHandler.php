@@ -28,7 +28,7 @@ class MyErrorHandler
         ini_set('display_errors', self::$display_errors);
 
         //-------------
-        set_error_handler("angelrove\utils\MyErrorHandler::handler");
+        set_error_handler    ("angelrove\utils\MyErrorHandler::handler");
         set_exception_handler("angelrove\utils\MyErrorHandler::handler_excentions");
     }
     //------------------------------------------------------------------
@@ -37,8 +37,14 @@ class MyErrorHandler
         error_log($e);
 
         if (self::$display_errors) {
-            $msg = $e->getMessage() . ' in ' . $e->getFile() . '(' . $e->getLine() . ')' . "\n" .
-            $e->getTraceASString();
+            $msg = $e->getMessage() . ' in ' . $e->getFile() . '(' . $e->getLine() . ')';
+
+            if (method_exists($e,'getQuery')) {
+                $msg .= "\nin query: \n ".$e->getQuery();
+            }
+
+            $msg .= "\n" . $e->getTraceASString();
+
             self::print_err($msg, true);
         } else {
             throw $e;
@@ -126,10 +132,11 @@ class MyErrorHandler
     {
         $style = ($isException) ? 'background:wheat;' : 'background:#eee;';
 
-        echo '</select><pre style="max-width:1100px;max-height:400px;' . $style . ' font-size:13px;padding:8px;border:1px solid #de9595;text-align:left">' .
-        "<b>ErrorHandler - debug backtrace</b>\n---------------------------------\n" .
-        print_r($object, true) .
-            '</pre>';
+        echo '</select>'.
+             '<pre style="'.$style.' font-size:13px;padding:8px;border:1px solid #de9595;text-align:left">' .
+                "<b>ErrorHandler - debug backtrace</b>\n---------------------------------\n" .
+                print_r($object, true) .
+             '</pre>';
     }
     //------------------------------------------------------------------
 }

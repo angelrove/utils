@@ -82,8 +82,8 @@ class Db_mysql
         //-----------
         try {
             if (!$result = mysqli_query(self::$db_dbconn, $query)) {
-                $strErr = mysqli_error(self::$db_dbconn) . ":\n" . $query;
-                throw new \Exception($strErr);
+                $strErr = mysqli_error(self::$db_dbconn);
+                throw new Db_mysqlQueryException($strErr, $query);
             }
         } catch (mysqli_sql_exception $e) {
             throw $e;
