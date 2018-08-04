@@ -82,7 +82,10 @@ class MyErrorHandler
         //  - necesario para que se muestren los errores en pantalla
         //  - escribirá los errores en la ruta por defecto definida en 'error_log'
         if (self::$display_errors) {
-            self::print_err(self::debug_string_backtrace());
+            // A veces el tamaño es brutal
+            // self::print_err(self::debug_string_backtrace());
+
+            // continuar gestor de errores de php
             return false;
         } else {
         }

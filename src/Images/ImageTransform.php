@@ -202,6 +202,13 @@ class ImageTransform
         return true;
     }
     //---------------------------------------------------------------------
+    public static function human_filesize($bytes, $decimals = 2) {
+       $sz = 'BKMGTP';
+       $factor = floor((strlen($bytes) - 1) / 3);
+
+       return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+    }
+    //---------------------------------------------------------------------
     public static function getDatosImg($img_dir, $img_name)
     {
         $ruta = $img_dir . '/' . $img_name;
@@ -210,6 +217,7 @@ class ImageTransform
             throw new \Exception("Error: la ruta del archivo no existe: '$ruta'");
         }
 
+        // Datos image -----
         $datos['dir']    = $img_dir;
         $datos['nombre'] = $img_name;
 
@@ -217,7 +225,7 @@ class ImageTransform
         if (!$datosImg) {
             throw new \Exception("Error al obtener datos de la imagen: '$ruta'");
         }
-        // print_r2($datosImg);exit();
+        // print_r2($datosImg);
 
         if (!$datosImg) {
             echo ("ImageTransform: ERROR: No se puede abrir la imagen [$ruta]<br>");
@@ -228,6 +236,13 @@ class ImageTransform
         $datos['height'] = $datosImg[1];
         $datos['type']   = $datosImg[2];
         $datos['mime']   = $datosImg['mime'];
+
+        // File size ------
+        // $file_size = filesize($ruta);
+        // if ($file_size > 1300000) {
+        //     print_r2($file_size.': '.self::human_filesize($file_size));
+        //     throw new \Exception("Error imagen demasiado grande: '$ruta'");
+        // }
 
         //$datos['image'] = @imagecreatefromjpeg($ruta) or die("No se puede abrir la imagen JPEG [$ruta]");
         switch ($datos['type']) {

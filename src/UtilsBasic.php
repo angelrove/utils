@@ -53,6 +53,9 @@ class UtilsBasic
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_MAXREDIRS, 1);
 
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 3);
+
         //-----
         $result = curl_exec($curl);
         if ($result === FALSE) {
