@@ -7,8 +7,35 @@
 
 namespace angelrove\utils;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+
 class UtilsBasic
 {
+    //------------------------------------------------------------------
+    /*
+     * http://docs.guzzlephp.org/en/latest/overview.html
+     */
+    public static function callAPI2($method, $url, $headers = false, $data = false)
+    {
+        // print_r2($url); print_r2($headers); exit();
+
+        $body = json_encode($data, JSON_UNESCAPED_UNICODE);
+
+        // Request ----
+        $client = new Client();
+        $request = new Request($method, $url, $headers, $body);
+
+        // Response ---
+        $response = $client->send($request, ['timeout' => 2]);
+
+        $body = $response->getBody();
+        $remainingBytes = $body->getContents();
+
+        // print_r2($remainingBytes);
+
+        return $remainingBytes;
+    }
     //------------------------------------------------------------------
     /*
      * From https://stackoverflow.com/questions/9802788/call-a-rest-api-in-php
@@ -22,14 +49,19 @@ class UtilsBasic
             case "POST":
                 curl_setopt($curl, CURLOPT_POST, 1);
                 if ($data) {
-                    $data = json_encode( $data, JSON_UNESCAPED_UNICODE ); // json encode
+                    $data = json_encode( $data, JSON_UNESCAPED_UNICODE );
                     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
                 }
-                break;
+            break;
 
             case "PUT":
                 curl_setopt($curl, CURLOPT_PUT, 1);
-                break;
+
+                if ($data) {
+                    $data = json_encode( $data, JSON_UNESCAPED_UNICODE );
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                }
+            break;
 
             default:
                 if ($data) {
