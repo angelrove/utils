@@ -270,7 +270,7 @@ class ImageTransform
             break;
         }
 
-        print_r2("type: ".$datos['type']);
+        // print_r2("type: ".$datos['type']);
 
         return $datos;
     }
