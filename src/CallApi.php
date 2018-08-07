@@ -53,11 +53,6 @@ class CallApi
      */
     public static function call($method, $url, $headers = false, $data = false)
     {
-        print_r2("$method, $url");
-        print_r2($data);
-        print_r2($headers);
-        exit();
-
         self::$lastUrl = $url;
 
         $curl = curl_init();
