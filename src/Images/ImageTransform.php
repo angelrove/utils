@@ -237,31 +237,40 @@ class ImageTransform
         $datos['type']   = $datosImg[2];
         $datos['mime']   = $datosImg['mime'];
 
-        // File size ------
         // $file_size = filesize($ruta);
         // if ($file_size > 1300000) {
         //     print_r2($file_size.': '.self::human_filesize($file_size));
         //     throw new \Exception("Error imagen demasiado grande: '$ruta'");
         // }
 
-        //$datos['image'] = @imagecreatefromjpeg($ruta) or die("No se puede abrir la imagen JPEG [$ruta]");
+        // imagecreate ------
+        // print_r2("ruta: ".$ruta);
+        // print_r2("size: ".self::human_filesize(filesize($ruta)));
+        // print_r2("mime: ".$datos['mime']);
+
         switch ($datos['type']) {
-            case 1:
+            case IMG_GIF:
                 $datos['image'] = imagecreatefromgif($ruta);
                 $datos['type']  = 'GIF';
-                break;
-            case 2:
+            break;
+
+            case IMG_JPEG:
+            case IMG_JPG:
                 $datos['image'] = imagecreatefromjpeg($ruta);
                 $datos['type']  = 'JPEG';
-                break;
-            case 3:
+            break;
+
+            case IMG_PNG:
                 $datos['image'] = imagecreatefrompng($ruta);
                 $datos['type']  = 'PNG';
-                break;
+            break;
+
             default:
-                trigger_error('Unsupported filetype!: ' . $img_name . ' [' . $datos['type'] . ']', E_USER_WARNING);
-                break;
+                trigger_error('Unsupported filetype!: '.$img_name.' ['.$datos['type'].' - '.$datos['mime'].']', E_USER_WARNING);
+            break;
         }
+
+        print_r2("type: ".$datos['type']);
 
         return $datos;
     }
