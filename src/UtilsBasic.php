@@ -16,7 +16,7 @@ class UtilsBasic
     /*
      * http://docs.guzzlephp.org/en/latest/overview.html
      */
-    public static function callAPI2($method, $url, $headers = false, $data = false)
+    public static function callAPI2($method, $url, array $headers = array(), array $data = array())
     {
         // print_r2($url); print_r2($headers); exit();
 
@@ -27,7 +27,7 @@ class UtilsBasic
         $request = new Request($method, $url, $headers, $body);
 
         // Response ---
-        $response = $client->send($request, ['timeout' => 2]);
+        $response = $client->send($request, ['timeout' => 3]);
 
         $body = $response->getBody();
         $remainingBytes = $body->getContents();
