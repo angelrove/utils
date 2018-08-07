@@ -12,29 +12,38 @@ use GuzzleHttp\Psr7\Request;
 
 class CallApi
 {
+    static private $lastResponse;
+    static private $lastUrl;
+
+    //------------------------------------------------------------------
+    public static function getJsonResponse()
+    {
+        return self::$lastResponse;
+    }
     //------------------------------------------------------------------
     /*
      * http://docs.guzzlephp.org/en/latest/overview.html
      */
     public static function call2($method, $url, array $headers = array(), array $data = array())
     {
+        self::$lastUrl = $url;
+
         // print_r2($url); print_r2($headers); exit();
 
         $body = json_encode($data, JSON_UNESCAPED_UNICODE);
 
         // Request ----
-        $client = new Client();
+        $client  = new Client();
         $request = new Request($method, $url, $headers, $body);
 
         // Response ---
         $response = $client->send($request, ['timeout' => 3]);
 
         $body = $response->getBody();
-        $result = $body->getContents();
-        // print_r2($result);
+        self::$lastResponse = $body->getContents();
 
         // json decode ---
-        $result = self::responseDecode($result);
+        $result = self::responseDecode(self::$lastResponse);
 
         return $result;
     }
@@ -44,6 +53,8 @@ class CallApi
      */
     public static function call($method, $url, $data = false, $headers = false)
     {
+        self::$lastUrl = $url;
+
         $curl = curl_init();
 
         switch ($method)
@@ -91,18 +102,18 @@ class CallApi
         curl_setopt($curl, CURLOPT_TIMEOUT, 3);
 
         // Curl exec -------
-        $result = curl_exec($curl);
+        self::$lastResponse = curl_exec($curl);
 
-        if ($result === FALSE) {
+        if (self::$lastResponse === FALSE) {
             $msgErr = curl_error($curl);
             curl_close($curl);
 
-            throw new \Exception('callAPI - cURL Error: '.$msgErr, 1);
+            throw new \Exception('CallAPI - cURL Error: '.$msgErr, 1);
         }
         curl_close($curl);
 
         // json decode -----
-        $result = self::responseDecode($result);
+        $result = self::responseDecode(self::$lastResponse);
 
         return $result;
     }
@@ -111,7 +122,7 @@ class CallApi
     {
         $result = json_decode($response);
         if ($result == NULL) {
-            throw new \Exception("callAPI - decoding response: ".$response);
+            throw new \Exception("CallAPI - decoding response: ".self::$lastUrl.'<div style="background:white">'.$response.'</div>');
         }
 
         return $result;
