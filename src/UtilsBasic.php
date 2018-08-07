@@ -98,6 +98,14 @@ class UtilsBasic
         return $result;
     }
     //------------------------------------------------------------------
+    public static function fileExtFromUrl($url)
+    {
+        $ext = pathinfo($url, PATHINFO_EXTENSION);
+        list($ext) = explode('?', $ext);
+
+        return $ext;
+    }
+    //------------------------------------------------------------------
     public static function parse_domain($host = '')
     {
         if (!$host) {
