@@ -51,8 +51,13 @@ class CallApi
     /*
      * From https://stackoverflow.com/questions/9802788/call-a-rest-api-in-php
      */
-    public static function call($method, $url, $data = false, $headers = false)
+    public static function call($method, $url, $headers = false, $data = false)
     {
+        print_r2("$method, $url");
+        print_r2($data);
+        print_r2($headers);
+        exit();
+
         self::$lastUrl = $url;
 
         $curl = curl_init();
