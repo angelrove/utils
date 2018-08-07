@@ -63,6 +63,7 @@ class ImageTransform
         }
 
         // Create image ----
+        // print_r2("$th_width, $th_height");
         $output = imagecreatetruecolor($th_width, $th_height);
 
         // white background
@@ -248,29 +249,28 @@ class ImageTransform
         // print_r2("size: ".self::human_filesize(filesize($ruta)));
         // print_r2("mime: ".$datos['mime']);
 
-        switch ($datos['type']) {
-            case IMG_GIF:
+        switch ($datos['mime']) {
+            case 'image/gif':
                 $datos['image'] = imagecreatefromgif($ruta);
                 $datos['type']  = 'GIF';
             break;
 
-            case IMG_JPEG:
-            case IMG_JPG:
+            case 'image/jpeg':
                 $datos['image'] = imagecreatefromjpeg($ruta);
                 $datos['type']  = 'JPEG';
             break;
 
-            case IMG_PNG:
+            case 'image/png':
                 $datos['image'] = imagecreatefrompng($ruta);
                 $datos['type']  = 'PNG';
             break;
 
             default:
-                trigger_error('Unsupported filetype!: '.$img_name.' ['.$datos['type'].' - '.$datos['mime'].']', E_USER_WARNING);
+                throw new \Exception(
+                    '<b>Unsupported filetype!</b> '.$datos['mime'].' in '.$img_name.'<br>',
+                    1);
             break;
         }
-
-        // print_r2("type: ".$datos['type']);
 
         return $datos;
     }
