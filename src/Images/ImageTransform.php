@@ -42,6 +42,7 @@ class ImageTransform
     public static function resize($img_dir, $img_name, $th_width, $th_height='', $th_prefijo='', $toScreen=false)
     {
         // $trazas_obj = 'ImageTransform.php';
+        $ruta = $img_dir.'/'.$img_name;
 
         // Image data ----
         $img = self::getDatosImg($img_dir, $img_name);
@@ -69,7 +70,11 @@ class ImageTransform
         // white background
         // imagefill($output, 0, 0, imagecolorallocate($output, 255, 255, 255));
 
-        imagecopyresampled($output, $img['image'], 0, 0, 0, 0, $th_width, $th_height, $img['width'], $img['height']);
+        imagecopyresampled($output,
+                           self::imageCreateFrom($ruta, $img['mime']),
+                           0, 0, 0, 0,
+                           $th_width, $th_height,
+                           $img['width'], $img['height']);
 
         // Output to screen ----
         if ($toScreen) {
@@ -172,7 +177,9 @@ class ImageTransform
 
         $src_w = $width; // Ancho original
         $src_h = $height; // Alto original
-        imagecopyresampled($newImg, $img['image'],
+        imagecopyresampled(
+            $newImg,
+            self::imageCreateFrom($ruta, $img['mime']),
             0, 0,
             $src_x, $src_y,
             $dst_w, $dst_h,
@@ -210,7 +217,7 @@ class ImageTransform
        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
     }
     //---------------------------------------------------------------------
-    public static function getDatosImg($img_dir, $img_name)
+    private static function getDatosImg($img_dir, $img_name)
     {
         $ruta = $img_dir . '/' . $img_name;
 
@@ -251,18 +258,15 @@ class ImageTransform
 
         switch ($datos['mime']) {
             case 'image/gif':
-                $datos['image'] = imagecreatefromgif($ruta);
-                $datos['type']  = 'GIF';
+                $datos['type'] = 'GIF';
             break;
 
             case 'image/jpeg':
-                $datos['image'] = imagecreatefromjpeg($ruta);
-                $datos['type']  = 'JPEG';
+                $datos['type'] = 'JPEG';
             break;
 
             case 'image/png':
-                $datos['image'] = imagecreatefrompng($ruta);
-                $datos['type']  = 'PNG';
+                $datos['type'] = 'PNG';
             break;
 
             default:
@@ -273,6 +277,29 @@ class ImageTransform
         }
 
         return $datos;
+    }
+    //---------------------------------------------------------------------
+    private function imageCreateFrom($ruta, $mime)
+    {
+        switch ($mime) {
+            case 'image/gif':
+                return imagecreatefromgif($ruta);
+            break;
+
+            case 'image/jpeg':
+                return imagecreatefromjpeg($ruta);
+            break;
+
+            case 'image/png':
+                return imagecreatefrompng($ruta);
+            break;
+
+            default:
+                throw new \Exception(
+                    '<b>Unsupported filetype!</b> '.$mime.' in '.$ruta.'<br>',
+                    1);
+            break;
+        }
     }
     //---------------------------------------------------------------------
 }
