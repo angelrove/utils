@@ -108,7 +108,7 @@ class CallApi
             $msgErr = curl_error($curl);
             curl_close($curl);
 
-            throw new \Exception('CallAPI - cURL Error: '.$msgErr, 1);
+            throw new \Exception('CallAPI - cURL Error: '.$msgErr." in url: '$url'");
         }
         curl_close($curl);
 
