@@ -40,10 +40,11 @@ class Caching
     // Setters
     //-------------------------------------------------------------------
     // $cacheTime: nº de minutos
-    public function __construct($cacheDir, $cacheTime = 1)
+    public function __construct($cacheDir, $cacheTime = 1, $setCompress = true)
     {
         $this->cacheDir  = $cacheDir;
         $this->cacheTime = 60 * $cacheTime;
+        $this->setCompress = $setCompress;
     }
     //-------------------------------------------------------------------
     public function set_compress($flag)

@@ -16,36 +16,37 @@ class CallApi
     static private $lastUrl;
 
     //------------------------------------------------------------------
-    public static function getJsonResponse()
+    public static function getLastJsonResponse()
     {
         return self::$lastResponse;
     }
     //------------------------------------------------------------------
-    /*
-     * http://docs.guzzlephp.org/en/latest/overview.html
-     */
-    public static function call2($method, $url, array $headers = array(), array $data = array())
+    public static function responseDecode($response)
     {
-        self::$lastUrl = $url;
-
-        // print_r2($url); print_r2($headers); exit();
-
-        $body = json_encode($data, JSON_UNESCAPED_UNICODE);
-
-        // Request ----
-        $client  = new Client();
-        $request = new Request($method, $url, $headers, $body);
-
-        // Response ---
-        $response = $client->send($request, ['timeout' => 3]);
-
-        $body = $response->getBody();
-        self::$lastResponse = $body->getContents();
-
-        // json decode ---
-        $result = self::responseDecode(self::$lastResponse);
+        $result = json_decode($response);
+        if ($result == NULL) {
+            throw new \Exception("CallAPI - decoding response: ".self::$lastUrl.'<div style="background:white">'.$response.'</div>');
+        }
 
         return $result;
+    }
+    //------------------------------------------------------------------
+    // Call API
+    //------------------------------------------------------------------
+    public static function callAsObject($method, $url, array $headers = array(), array $data = array())
+    {
+        $response = self::call($method, $url, $headers, $data);
+
+        // json decode ---
+        return self::responseDecode($response);
+    }
+    //------------------------------------------------------------------
+    public static function call2AsObject($method, $url, array $headers = array(), array $data = array())
+    {
+        $response = self::call2($method, $url, $headers, $data);
+
+        // json decode ---
+        return self::responseDecode($response);
     }
     //------------------------------------------------------------------
     /*
@@ -112,20 +113,31 @@ class CallApi
         }
         curl_close($curl);
 
-        // json decode -----
-        $result = self::responseDecode(self::$lastResponse);
-
-        return $result;
+        return self::$lastResponse;
     }
     //------------------------------------------------------------------
-    private static function responseDecode($response)
+    /*
+     * http://docs.guzzlephp.org/en/latest/overview.html
+     */
+    public static function call2($method, $url, array $headers = array(), array $data = array())
     {
-        $result = json_decode($response);
-        if ($result == NULL) {
-            throw new \Exception("CallAPI - decoding response: ".self::$lastUrl.'<div style="background:white">'.$response.'</div>');
-        }
+        self::$lastUrl = $url;
 
-        return $result;
+        // print_r2($url); print_r2($headers); exit();
+
+        $body = json_encode($data, JSON_UNESCAPED_UNICODE);
+
+        // Request ----
+        $client  = new Client();
+        $request = new Request($method, $url, $headers, $body);
+
+        // Response ---
+        $response = $client->send($request, ['timeout' => 3]);
+
+        $body = $response->getBody();
+        self::$lastResponse = $body->getContents();
+
+        return self::$lastResponse;
     }
     //------------------------------------------------------------------
 }
