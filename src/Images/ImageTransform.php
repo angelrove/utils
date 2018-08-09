@@ -217,7 +217,7 @@ class ImageTransform
        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
     }
     //---------------------------------------------------------------------
-    private static function getDatosImg($img_dir, $img_name)
+    public static function getDatosImg($img_dir, $img_name)
     {
         $ruta = $img_dir . '/' . $img_name;
 
@@ -279,7 +279,7 @@ class ImageTransform
         return $datos;
     }
     //---------------------------------------------------------------------
-    private function imageCreateFrom($ruta, $mime)
+    public function imageCreateFrom($ruta, $mime)
     {
         switch ($mime) {
             case 'image/gif':
