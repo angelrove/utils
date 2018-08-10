@@ -14,10 +14,9 @@ class WebCrawlerContent
     private $dom;
 
     //-------------------------------------------------------
-    public function __construct($url, $flagType=false)
+    public function __construct($url)
     {
         $this->url = $url;
-        $this->flagType = $flagType;
 
         // Load HTML ----
         $this->dom = new \DOMDocument('1.0');
@@ -25,7 +24,7 @@ class WebCrawlerContent
         // $this->dom->formatOutput = true;
     }
     //-------------------------------------------------------
-    public function getElementContent($tag, $attribute, $attr_value, $getAttr='')
+    public function getElementContent($tag, $attribute, $attr_value, $getAttr='', $flagType=false)
     {
         $elements = $this->dom->getElementsByTagName($tag);
 
@@ -44,8 +43,8 @@ class WebCrawlerContent
             }
             // content ---
             else {
-                if ($this->flagType == 'xml') {
-                    $content = $this->domdom->saveXML($element);
+                if ($flagType == 'xml') {
+                    $content = $this->dom->saveXML($element);
                 } else {
                     $content = $element->nodeValue;
                 }
