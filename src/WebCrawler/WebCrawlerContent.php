@@ -19,8 +19,8 @@ class WebCrawlerContent
         $this->url = $url;
 
         // Load HTML ----
-        $this->dom = new \DOMDocument('1.0');
-        @$this->dom->loadHTMLFile($this->url);
+        $this->dom = new \DOMDocument();
+        $this->dom->loadHTMLFile($this->url, LIBXML_NOERROR);
         // $this->dom->formatOutput = true;
     }
     //-------------------------------------------------------
