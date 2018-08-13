@@ -20,7 +20,7 @@ class WebCrawlerContent
 
         // Load HTML ----
         $this->dom = new \DOMDocument();
-        $this->dom->loadHTMLFile($this->url, LIBXML_NOERROR);
+        @$this->dom->loadHTMLFile($this->url, LIBXML_NOERROR);
         // $this->dom->formatOutput = true;
     }
     //-------------------------------------------------------
