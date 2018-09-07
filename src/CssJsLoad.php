@@ -71,14 +71,16 @@ class CssJsLoad
     public static function check_getjs_calls()
     {
         if (self::$called_get_js == true) {
-            trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
+            // trigger_error("Called 'set js' after 'get()'", E_USER_NOTICE);
+            throw new \Exception("Called 'set css' after 'get()'", 1);
         }
     }
     //---------------------------------------------------------------------
     public static function check_getcss_calls()
     {
         if (self::$called_get_css == true) {
-            trigger_error("Called 'set()' after 'get()'", E_USER_NOTICE);
+            // trigger_error("Called 'set css' after 'get()'", E_USER_NOTICE);
+            throw new \Exception("Called 'set css' after 'get()'", 1);
         }
     }
     //---------------------------------------------------------------------

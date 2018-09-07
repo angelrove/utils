@@ -170,7 +170,7 @@ class Db_mysql
         return $listRows;
     }
     //----------
-    public static function getListObject($query)
+    public static function getListObject($query, $noId = false)
     {
         $listRows = array();
 
@@ -180,7 +180,11 @@ class Db_mysql
         }
 
         while ($row = mysqli_fetch_object($result)) {
-            $listRows[$row->id] = $row;
+            if ($noId) {
+                $listRows[] = $row;
+            } else {
+                $listRows[$row->id] = $row;
+            }
         }
         mysqli_free_result($result);
 
