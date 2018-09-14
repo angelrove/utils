@@ -63,7 +63,7 @@ class UtilsBasic
     }
     //------------------------------------------------------------------
     // Concatena todas las cadenas de un array mediante un separador dado
-    public static function array_implode($sep, array $listStr)
+    public static function implode($sep, array $listStr)
     {
         $strResult = '';
 
