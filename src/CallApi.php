@@ -119,17 +119,14 @@ class CallApi
     /*
      * http://docs.guzzlephp.org/en/latest/overview.html
      */
-    public static function call2($method, $url, array $headers = array(), array $data = array())
+    public static function call2($method, $url, array $headers = array(), $bodyJson)
     {
-        self::$lastUrl = $url;
-
         // print_r2($url); print_r2($headers); exit();
-
-        $body = json_encode($data, JSON_UNESCAPED_UNICODE);
+        self::$lastUrl = $url;
 
         // Request ----
         $client  = new Client();
-        $request = new Request($method, $url, $headers, $body);
+        $request = new Request($method, $url, $headers, $bodyJson);
 
         // Response ---
         $response = $client->send($request, ['timeout' => 3]);
