@@ -41,9 +41,9 @@ class CallApi
         return self::responseDecode($response);
     }
     //------------------------------------------------------------------
-    public static function call2AsObject($method, $url, array $headers = array(), array $data = array())
+    public static function call2AsObject($method, $url, array $headers = array(), $bodyJson)
     {
-        $response = self::call2($method, $url, $headers, $data);
+        $response = self::call2($method, $url, $headers, $bodyJson);
 
         // json decode ---
         return self::responseDecode($response);
