@@ -23,9 +23,16 @@ class CallApi
     //------------------------------------------------------------------
     public static function responseDecode($response)
     {
+        if (!$response) {
+            return '';
+        }
+
         $result = json_decode($response);
         if ($result == NULL) {
-            throw new \Exception("CallAPI - decoding response: ".self::$lastUrl.'<div style="background:white">'.$response.'</div>');
+            throw new \Exception(
+                "CallAPI - decoding response: ".self::$lastUrl.
+                '<div style="background:white">'.print_r($response, true).'</div>'
+            );
         }
 
         return $result;
