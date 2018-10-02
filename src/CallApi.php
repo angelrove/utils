@@ -31,7 +31,7 @@ class CallApi
         if ($result == NULL) {
             throw new \Exception(
                 "CallAPI - decoding response: ".self::$lastUrl.
-                '<div style="background:white">'.print_r($response, true).'</div>'
+                '<div style="background:white">'.$response.'</div>'
             );
         }
 
