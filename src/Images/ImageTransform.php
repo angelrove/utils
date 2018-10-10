@@ -279,7 +279,7 @@ class ImageTransform
         return $datos;
     }
     //---------------------------------------------------------------------
-    public function imageCreateFrom($ruta, $mime)
+    public static function imageCreateFrom($ruta, $mime)
     {
         switch ($mime) {
             case 'image/gif':
