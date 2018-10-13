@@ -191,4 +191,42 @@ class UtilsBasic
         }
     }
     //------------------------------------------------------------------
+    public static function get_imageFromUrl($url_image,
+                                            $path_uploads,
+                                            $dir_upload,
+                                            $name_file,
+                                            $max_with=false)
+    {
+        // Image name ---
+        $ext = pathinfo($url_image, PATHINFO_EXTENSION);
+        list($ext) = explode('?', $ext);
+        $img_name = "$name_file.$ext";
+
+        // Image path ---
+        $path_upload = $path_uploads.'/'.$dir_upload.'/';
+        $full_path   = $path_upload.$img_name;
+
+        // Save image file ---
+        if (($ret = @file_get_contents($url_image)) === false) {
+            // throw new \Exception("Failed to open url image [$url_image]");
+            return false;
+        }
+        file_put_contents($full_path, $ret);
+
+        // Resize ------------
+        if ($max_with) {
+            list($width, $height, $tipo, $atributos) = getimagesize($full_path);
+            if ($width > $max_with) {
+                \angelrove\utils\Images\ImageTransform::resize($path_upload, $img_name, $max_with);
+            }
+        }
+
+        // str membrillo -----
+        // $image_mime = image_type_to_mime_type(exif_imagetype($full_path));
+        $image_mime = '';
+        $ret = "$img_name#$img_name###$image_mime#$dir_upload";
+
+        return $ret;
+    }
+    //------------------------------------------------------------------
 }
