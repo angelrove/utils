@@ -139,7 +139,7 @@ class CallApi
         $request = new Request($method, $url, $headers, $body);
 
         // Response ---
-        $response = $client->send($request, ['timeout' => 3]);
+        $response = $client->send($request, ['timeout' => 9]);
 
         $body = $response->getBody();
         self::$lastResponse = $body->getContents();
