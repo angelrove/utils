@@ -48,9 +48,13 @@ class CallApi
         return self::responseDecode($response);
     }
     //------------------------------------------------------------------
-    public static function call2AsObject($method, $url, array $headers = array(), array $data = array())
+    public static function call2AsObject($method,
+                                         $url,
+                                         array $headers = array(),
+                                         array $data = array(),
+                                         $timeout=8)
     {
-        $response = self::call2($method, $url, $headers, $data);
+        $response = self::call2($method, $url, $headers, $data, $timeout);
 
         // json decode ---
         return self::responseDecode($response);
@@ -126,7 +130,7 @@ class CallApi
     /*
      * http://docs.guzzlephp.org/en/latest/overview.html
      */
-    public static function call2($method, $url, array $headers = array(), array $data = array())
+    public static function call2($method, $url, array $headers = array(), array $data = array(), $timeout=8)
     {
         self::$lastUrl = $url;
 
@@ -139,7 +143,7 @@ class CallApi
         $request = new Request($method, $url, $headers, $body);
 
         // Response ---
-        $response = $client->send($request, ['timeout' => 9]);
+        $response = $client->send($request, ['timeout' => $timeout]);
 
         $body = $response->getBody();
         self::$lastResponse = $body->getContents();
