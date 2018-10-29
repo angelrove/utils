@@ -51,7 +51,7 @@ class FileSystem
         }
     }
     //--------------------------------------------------------------------
-    public static function strReplace($ruta, $recursive, $testing, $cadena_buscada, $cadena_sustituta)
+    public static function strReplaceNames($ruta, $recursive, $testing, $cadena_buscada, $cadena_sustituta)
     {
         $strResult = '';
 
@@ -59,6 +59,20 @@ class FileSystem
         foreach ($listFiles as $file) {
             $fileNameNew = str_replace($cadena_buscada, $cadena_sustituta, $file['name']);
             $strResult .= self::renameFile($file['ruta'] . $file['name'], $file['ruta'] . $fileNameNew, $testing);
+        }
+
+        return $strResult;
+    }
+    //--------------------------------------------------------------------
+    public static function strReplace($ruta, $cadena_buscada, $cadena_sustituta)
+    {
+        $strResult = '';
+
+        $listFiles = self::getFiles($ruta, true);
+        foreach ($listFiles as $file) {
+            $str = file_get_contents($file['ruta'] . $file['name']);
+            $str = str_replace($cadena_buscada,  $cadena_sustituta, $str);
+            file_put_contents($file['ruta'] . $file['name'], $str);
         }
 
         return $strResult;
