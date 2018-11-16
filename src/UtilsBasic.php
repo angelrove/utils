@@ -13,6 +13,46 @@ use GuzzleHttp\Psr7\Request;
 class UtilsBasic
 {
     //------------------------------------------------------------------
+    public static function strDateChromeToTime($strDate)
+    {
+       $time = false;
+
+       // 2018-01-01T22:02 -------
+       if ($date = \DateTime::createFromFormat('Y-m-d\TH:i', $strDate)) {
+       }
+       // 2018-01-01T22:02:00 -------
+       elseif ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $strDate)) {
+       }
+
+       if ($date) {
+           $time = strftime("%Y-%m-%d %H:%M", $date->getTimestamp());
+       } else {
+           throw new \Exception("strDateChromeToTime(): Error processing date!! [$strDate]");
+       }
+
+       return $time;
+    }
+    //------------------------------------------------------------------
+    public static function strDateChromeToTimestamp($strDate)
+    {
+       $time = false;
+
+       // 2018-01-01T22:02 -------
+       if ($date = \DateTime::createFromFormat('Y-m-d\TH:i', $strDate)) {
+       }
+       // 2018-01-01T22:02:00 -------
+       elseif ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $strDate)) {
+       }
+
+       if ($date) {
+           $time = $date->getTimestamp();
+       } else {
+           throw new \Exception("strDateChromeToTimestamp(): Error processing date!! [$strDate]");
+       }
+
+       return $time;
+    }
+    //------------------------------------------------------------------
     public static function fileExtFromUrl($url)
     {
         $ext = pathinfo($url, PATHINFO_EXTENSION);
