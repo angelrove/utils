@@ -31,6 +31,7 @@ class Db_mysql
 
         //---
         @mysqli_query(self::$db_dbconn, "SET NAMES 'utf8'");
+        mysqli_set_charset(Db_mysql::$db_dbconn, 'utf8mb4');
 
         // scape strings ----
         if (!get_magic_quotes_gpc()) {
