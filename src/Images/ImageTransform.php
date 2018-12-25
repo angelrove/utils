@@ -8,7 +8,7 @@
 namespace angelrove\utils\Images;
 
 use angelrove\utils\FileSystem;
-// use angelrove\membrillo2\DebugTrace;
+// use angelrove\membrillo\DebugTrace;
 
 class ImageTransform
 {
