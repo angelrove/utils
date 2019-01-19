@@ -5,21 +5,12 @@
  *
  */
 
-namespace angelrove\utils;
+namespace angelrove\utils\CallApi;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-
-class CallApi
+class CallApiCurl
 {
-    static private $lastResponse;
     static private $lastUrl;
 
-    //------------------------------------------------------------------
-    public static function getLastJsonResponse()
-    {
-        return self::$lastResponse;
-    }
     //------------------------------------------------------------------
     public static function responseDecode($response)
     {
@@ -38,23 +29,9 @@ class CallApi
         return $result;
     }
     //------------------------------------------------------------------
-    // Call API
-    //------------------------------------------------------------------
     public static function callAsObject($method, $url, array $headers = array(), array $data = array())
     {
         $response = self::call($method, $url, $headers, $data);
-
-        // json decode ---
-        return self::responseDecode($response);
-    }
-    //------------------------------------------------------------------
-    public static function call2AsObject($method,
-                                         $url,
-                                         array $headers = array(),
-                                         array $data = array(),
-                                         $timeout=8)
-    {
-        $response = self::call2($method, $url, $headers, $data, $timeout);
 
         // json decode ---
         return self::responseDecode($response);
@@ -114,9 +91,9 @@ class CallApi
         curl_setopt($curl, CURLOPT_MAXREDIRS, 1);
 
         // Curl exec -------
-        self::$lastResponse = curl_exec($curl);
+        $response = curl_exec($curl);
 
-        if (self::$lastResponse === FALSE) {
+        if ($response === FALSE) {
             $msgErr = curl_error($curl);
             curl_close($curl);
 
@@ -124,31 +101,7 @@ class CallApi
         }
         curl_close($curl);
 
-        return self::$lastResponse;
-    }
-    //------------------------------------------------------------------
-    /*
-     * http://docs.guzzlephp.org/en/latest/overview.html
-     */
-    public static function call2($method, $url, array $headers = array(), array $data = array(), $timeout=8)
-    {
-        self::$lastUrl = $url;
-
-        // print_r2($url); print_r2($headers); exit();
-
-        $body = json_encode($data, JSON_UNESCAPED_UNICODE);
-
-        // Request ----
-        $client  = new Client();
-        $request = new Request($method, $url, $headers, $body);
-
-        // Response ---
-        $response = $client->send($request, ['timeout' => $timeout]);
-
-        $body = $response->getBody();
-        self::$lastResponse = $body->getContents();
-
-        return self::$lastResponse;
+        return $response;
     }
     //------------------------------------------------------------------
 }
