@@ -16,30 +16,51 @@ class CallApi
     static private $lastUrl;
 
     //------------------------------------------------------------------
-    public static function call($method, $url, array $headers = array(), array $data = array(),
+    public static function call($method,
+                                $url,
+                                array $headers = array(),
+                                array $data = array(),
                                 $timeout=8)
     {
-        // print_r2($url); print_r2($headers); exit();
-
         self::$lastUrl = $url;
 
+        // Headers ---
+        $headers_def = array(
+            'Content-Type' => 'application/json',
+        );
+        $headers = array_merge($headers_def, $headers);
+
+        // Body ---
         $body = json_encode($data, JSON_UNESCAPED_UNICODE);
 
         // Request ----
+        // print_r2($method); print_r2($url); print_r2($headers); print_r2($body);
+
         $client  = new Client();
         $request = new Request($method, $url, $headers, $body);
 
         // Response ---
-        $response = $client->send($request, ['timeout' => $timeout]);
+        try {
+            $response = $client->send($request, ['timeout' => $timeout]);
+        } catch (\Exception $e) {
+            if (strpos($e->getMessage(), 'error 28') !== false) {
+                $ret = new \StdClass();
+                $ret->statuscode = 'timeout';
+                $ret->body       = $e->getMessage();
+
+                return self::parseResult($ret, $method);
+            }
+            else {
+                throw new \Exception($e->getMessage());
+            }
+        }
+        // Ret ----
         $body = $response->getBody();
 
-        //----
         $ret = new \stdClass;
         $ret->statusCode = $response->getStatusCode();
-        $ret->body       = $body->getContents();
-        //----
+        $ret->body       = self::responseDecode($body->getContents());
 
-        // return $ret->body;
         return $ret;
     }
     //------------------------------------------------------------------
@@ -52,24 +73,12 @@ class CallApi
         $result = json_decode($response);
         if ($result == NULL) {
             throw new \Exception(
-                "CallAPI - decoding response: ".self::$lastUrl.
+                "CallAPI - responseDecode: ".self::$lastUrl.
                 '<div style="background:white">'.$response.'</div>'
             );
         }
 
         return $result;
-    }
-    //------------------------------------------------------------------
-    public static function callAsObject($method, $url, array $headers = array(),
-                                        array $data = array(),
-                                        $timeout=8)
-    {
-        $response  = self::call($method, $url, $headers, $data, $timeout);
-
-        // json decode ---
-        $response->body = self::responseDecode($response->body);
-
-        return $response;
     }
     //------------------------------------------------------------------
 }
