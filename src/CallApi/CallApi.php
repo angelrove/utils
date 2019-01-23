@@ -60,6 +60,8 @@ class CallApi
 
         $ret = new \stdClass;
         $ret->statusCode = $response->getStatusCode();
+
+        // As Json / As object
         if ($asJson) {
             $ret->body = $body->getContents();
         } else {
@@ -69,7 +71,7 @@ class CallApi
         return $ret;
     }
     //------------------------------------------------------------------
-    public static function responseDecode($response)
+    private static function responseDecode($response)
     {
         if (!$response) {
             return '';
