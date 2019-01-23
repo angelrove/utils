@@ -20,6 +20,7 @@ class CallApi
                                 $url,
                                 array $headers = array(),
                                 array $data = array(),
+                                $asJson=false,
                                 $timeout=8)
     {
         self::$lastUrl = $url;
@@ -59,7 +60,11 @@ class CallApi
 
         $ret = new \stdClass;
         $ret->statusCode = $response->getStatusCode();
-        $ret->body       = self::responseDecode($body->getContents());
+        if ($asJson) {
+            $ret->body = $body->getContents();
+        } else {
+            $ret->body = self::responseDecode($body->getContents());
+        }
 
         return $ret;
     }
