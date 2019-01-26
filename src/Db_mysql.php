@@ -158,11 +158,13 @@ class Db_mysql
     {
         $listRows = array();
 
+        // Query
         $result = self::query($query);
         if (!$result) {
             return false;
         }
 
+        // List rows
         while ($row = mysqli_fetch_assoc($result)) {
             $listRows[$row['id']] = $row;
         }
