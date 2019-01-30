@@ -48,13 +48,13 @@ class CallApi
                 $ret = new \StdClass();
                 $ret->statuscode = 'timeout';
                 $ret->body       = $e->getMessage();
-
-                return self::parseResult($ret, $method);
+                return $ret;
             }
             else {
                 throw new \Exception($e->getMessage());
             }
         }
+
         // Ret ----
         $body = $response->getBody();
 
