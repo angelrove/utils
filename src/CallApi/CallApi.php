@@ -47,11 +47,11 @@ class CallApi
             if (strpos($e->getMessage(), 'error 28') !== false) {
                 $ret = new \StdClass();
                 $ret->statuscode = 'timeout';
-                $ret->body       = $e->getMessage();
+                $ret->body = $e->getMessage();
                 return $ret;
             }
             else {
-                throw new \Exception($e->getMessage());
+                throw new \Exception($e->getMessage().'body: '.print_r($body, true).'<br>');
             }
         }
 
