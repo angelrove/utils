@@ -235,11 +235,17 @@ class UtilsBasic
                                             $path_uploads,
                                             $dir_upload,
                                             $name_file,
-                                            $max_with=false)
+                                            $max_with=false,
+                                            $def_ext='')
     {
         // Image name ---
         $ext = pathinfo($url_image, PATHINFO_EXTENSION);
         list($ext) = explode('?', $ext);
+
+        if ($def_ext && (strlen($ext) > 4 || !$ext)) {
+            $ext = $def_ext;
+        }
+
         $img_name = "$name_file.$ext";
 
         // Image path ---
