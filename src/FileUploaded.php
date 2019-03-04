@@ -77,15 +77,22 @@ class FileUploaded
         }
         //----
 
-        /** Ruta (URL) **/
-        $datos['ruta']             = $URL_UPLOADS . '/' . $datos['dir'];
-        $datos['ruta_completa']    = $datos['ruta'] . $datos['name'];
-        $datos['ruta_completa_th'] = $datos['ruta'] . 'th_' . $datos['name'];
-
-        /** Ruta (path) **/
-        $datos['path']             = $PATH_UPLOADS . '/' . $datos['dir'];
-        $datos['path_completo']    = $datos['path'] . $datos['name'];
-        $datos['path_completo_th'] = $datos['path'] . 'th_' . $datos['name'];
+        /** Ruta **/
+        if ($datos['dir']) {
+            $datos['ruta']             = $URL_UPLOADS . '/' . $datos['dir'];
+            $datos['ruta_completa']    = $datos['ruta'] . $datos['name'];
+            $datos['ruta_completa_th'] = $datos['ruta'] . 'th_' . $datos['name'];
+            $datos['path']             = $PATH_UPLOADS . '/' . $datos['dir'];
+            $datos['path_completo']    = $datos['path'] . $datos['name'];
+            $datos['path_completo_th'] = $datos['path'] . 'th_' . $datos['name'];
+        } else {
+            $datos['ruta']             = $datos['name'];
+            $datos['ruta_completa']    = $datos['ruta'];
+            $datos['ruta_completa_th'] = $datos['ruta'];
+            $datos['path']             = $datos['ruta'];
+            $datos['path_completo']    = $datos['ruta'];
+            $datos['path_completo_th'] = $datos['ruta'];
+        }
 
         return $datos;
     }
