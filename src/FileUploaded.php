@@ -78,14 +78,15 @@ class FileUploaded
         //----
 
         /** Ruta **/
-        if ($datos['dir']) {
-            $datos['ruta']             = $URL_UPLOADS . '/' . $datos['dir'];
-            $datos['ruta_completa']    = $datos['ruta'] . $datos['name'];
-            $datos['ruta_completa_th'] = $datos['ruta'] . 'th_' . $datos['name'];
-            $datos['path']             = $PATH_UPLOADS . '/' . $datos['dir'];
-            $datos['path_completo']    = $datos['path'] . $datos['name'];
-            $datos['path_completo_th'] = $datos['path'] . 'th_' . $datos['name'];
-        } else {
+        $datos['ruta']             = $URL_UPLOADS . '/' . $datos['dir'];
+        $datos['ruta_completa']    = $datos['ruta'] . $datos['name'];
+        $datos['ruta_completa_th'] = $datos['ruta'] . 'th_' . $datos['name'];
+        $datos['path']             = $PATH_UPLOADS . '/' . $datos['dir'];
+        $datos['path_completo']    = $datos['path'] . $datos['name'];
+        $datos['path_completo_th'] = $datos['path'] . 'th_' . $datos['name'];
+
+        // print_r2(substr($datos['name'], 0, 4));//exit();
+        if (substr($datos['name'], 0, 4) == 'http') {
             $datos['ruta']             = $datos['name'];
             $datos['ruta_completa']    = $datos['ruta'];
             $datos['ruta_completa_th'] = $datos['ruta'];
