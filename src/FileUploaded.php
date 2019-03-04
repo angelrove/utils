@@ -88,11 +88,11 @@ class FileUploaded
         // print_r2(substr($datos['name'], 0, 4));//exit();
         if (substr($datos['name'], 0, 4) == 'http') {
             $datos['ruta']             = $datos['name'];
-            $datos['ruta_completa']    = $datos['ruta'];
-            $datos['ruta_completa_th'] = $datos['ruta'];
-            $datos['path']             = $datos['ruta'];
-            $datos['path_completo']    = $datos['ruta'];
-            $datos['path_completo_th'] = $datos['ruta'];
+            $datos['ruta_completa']    = $datos['name'];
+            $datos['ruta_completa_th'] = $datos['name'];
+            $datos['path']             = $datos['name'];
+            $datos['path_completo']    = $datos['name'];
+            $datos['path_completo_th'] = $datos['name'];
         }
 
         return $datos;
