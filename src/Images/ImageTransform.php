@@ -100,6 +100,9 @@ class ImageTransform
             case 'PNG':
                 imagepng($output, $th_ruta);
                 break;
+            case 'WEBP':
+                imagewebp($newImg, $ruta);
+                break;
         }
 
         // $traza = "resize(): th_ruta = '$th_ruta';";
@@ -201,6 +204,9 @@ class ImageTransform
             case 'PNG':
                 imagepng($newImg, $ruta);
                 break;
+            case 'WEBP':
+                imagecreatefromwebp($newImg, $ruta);
+                break;
         }
 
         if ($outputBuffer === true) {
@@ -269,6 +275,10 @@ class ImageTransform
                 $datos['type'] = 'PNG';
             break;
 
+            case 'image/webp':
+                $datos['type'] = 'WEBP';
+            break;
+
             default:
                 throw new \Exception(
                     '<b>Unsupported filetype!</b> '.$datos['mime'].' in '.$img_name.'<br>',
@@ -292,6 +302,10 @@ class ImageTransform
 
             case 'image/png':
                 return imagecreatefrompng($ruta);
+            break;
+
+            case 'image/webp':
+                return imagecreatefromwebp($ruta);
             break;
 
             default:
