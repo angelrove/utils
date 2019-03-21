@@ -38,6 +38,9 @@ class Db_mysql
             foreach ($_REQUEST as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $key => $var) {
+                        if (is_array($var)) {
+                            continue;
+                        }
                         $_REQUEST[$key] = mysqli_real_escape_string(self::$db_dbconn, $var);
                         $_POST[$key]    = mysqli_real_escape_string(self::$db_dbconn, $var);
                     }
