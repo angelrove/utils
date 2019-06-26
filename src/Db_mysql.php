@@ -75,7 +75,7 @@ class Db_mysql
 
         // DEBUG ----
         if (DEBUG_SQL) {
-            print_r2('DEBUG_SQL: ' . $query);
+            print_r2('Db_mysql::query(): ' . $query);
         }
         //-----------
 
