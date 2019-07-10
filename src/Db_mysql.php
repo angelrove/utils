@@ -323,7 +323,7 @@ class Db_mysql
     //                                     $replace_field2 = '',
     //                                     $replace_field_value2 = '')
     // {
-    //     $sqlListCampos = "SELECT column_name AS nombre FROM information_schema.columns WHERE table_name='$table' AND column_name<>'id' $sqlFiltro";
+    //     $sqlListCampos = "SELECT column_name AS name FROM information_schema.columns WHERE table_name='$table' AND column_name<>'id' $sqlFiltro";
     //     $listCampos    = self::getListOneField($sqlListCampos, true);
 
     //     $sql_campos = implode(",", $listCampos);

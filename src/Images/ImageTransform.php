@@ -49,7 +49,7 @@ class ImageTransform
         // DebugTrace::out($trazas_obj.': $img', $img);
 
         // Path ----
-        $thName  = $th_prefijo . $img['nombre'];
+        $thName  = $th_prefijo . $img['name'];
         $th_ruta = $img['dir'] . '/' . $thName;
 
         // Calculate resized ratio ----
@@ -232,8 +232,8 @@ class ImageTransform
         }
 
         // Datos image -----
-        $datos['dir']    = $img_dir;
-        $datos['nombre'] = $img_name;
+        $datos['dir']  = $img_dir;
+        $datos['name'] = $img_name;
 
         $datosImg = getimagesize($ruta);
         if (!$datosImg) {
