@@ -22,7 +22,7 @@ class CssJsLoad
     //---
     private static $set_minify     = true;
     private static $cache_disabled = false;
-    private static $version        = '1';
+    private static $cache_version  = '1';
 
     //---
     private static $async_files = array();
@@ -45,25 +45,17 @@ class CssJsLoad
     //---------------------------------------------------------------------
     // CONF
     //---------------------------------------------------------------------
-    public static function __init($path_cache, $url_cache)
+    public static function __init($path_cache, $url_cache, $minify, $cache_version)
     {
         self::$path_cache = $path_cache;
         self::$url_cache  = $url_cache;
-    }
-    //---------------------------------------------------------------------
-    public static function set_minify($flag)
-    {
-        self::$set_minify = $flag;
+        self::$set_minify = $minify;
+        self::$cache_version = $cache_version;
     }
     //---------------------------------------------------------------------
     public static function set_cache_disabled($flag)
     {
         self::$cache_disabled = $flag;
-    }
-    //---------------------------------------------------------------------
-    public static function set_version($version)
-    {
-        self::$version = $version;
     }
     //---------------------------------------------------------------------
     // SETTERS
@@ -265,7 +257,7 @@ class CssJsLoad
         }
 
         // version + keys + ext
-        $cache_fileName = self::$version . '_' . md5($listKeys) . '.' . $ext;
+        $cache_fileName = self::$cache_version . '_' . md5($listKeys) . '.' . $ext;
 
         /** Write cache **/
         $cache_file_path = self::$path_cache . '/' . $cache_fileName;

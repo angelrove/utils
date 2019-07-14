@@ -32,7 +32,7 @@ class CronUtils
 
         if (in_array($horaAct, $horas)) {
             printLog("del_cache: $prefijo");
-            FileSystem::deleteFiles(BASE_DIR . '/_cache', false, $prefijo);
+            FileSystem::deleteFiles(DOC_ROOT_MAIN . '/_cache', false, $prefijo);
         }
     }
     //---------------------------------------------------------
