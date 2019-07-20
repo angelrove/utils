@@ -10,6 +10,7 @@ namespace angelrove\utils;
 class Db_mysql
 {
     public static $db_dbconn;
+    private static $DEBUG_SQL = false;
 
     //------------------------------------------------------------
     public static function getConn($dbHost, $dbUser, $dbPassword, $database)
@@ -67,6 +68,11 @@ class Db_mysql
         return mysqli_real_escape_string(self::$db_dbconn, $str);
     }
     //------------------------------------------------------------
+    public static function debug_sql($flag)
+    {
+        self::$DEBUG_SQL = $flag;
+    }
+    //------------------------------------------------------------
     /* Consulta */
     //------------------------------------------------------------
     public static function query($query)
@@ -74,7 +80,7 @@ class Db_mysql
         global $CONFIG_APP;
 
         // DEBUG ----
-        if (DEBUG_SQL) {
+        if (self::$DEBUG_SQL === true) {
             print_r2('Db_mysql::query(): ' . $query);
         }
         //-----------
