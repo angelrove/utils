@@ -359,6 +359,11 @@ class Db_mysql
         return mysqli_affected_rows(self::$db_dbconn);
     }
     //--------------
+    public static function count($sqlQuery)
+    {
+        return self::getNumRows($sqlQuery);
+    }
+
     public static function getNumRows($sqlQuery)
     {
         // Eliminar saltos de linea
