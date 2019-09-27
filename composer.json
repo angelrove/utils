@@ -2,22 +2,17 @@
     "name": "angelrove/utils",
     "type": "library",
     "description": "Basic Utils",
+    "license": "MIT",
     "authors": [
-        {
-            "name": "Jose Angel Romero",
-            "email": "jangel.romero@gmail.com"
-        }
+        { "name": "Jose Angel Romero", "email": "jangel.romero@gmail.com" }
     ],
-
-    "require-dev": {
-       "angelrove/clone-csscolor": "dev-master"
-    },
-
     "require": {
+        "php": "^7.1",
+        "angelrove/clone-csscolor": "dev-master"
     },
     "autoload": {
-        "classmap": [
-
-        ]
+        "psr-4": {
+            "angelrove\\utils\\": "vendor/angelrove/utils/src/"
+        }
     }
 }
