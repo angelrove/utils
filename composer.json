@@ -7,8 +7,7 @@
         { "name": "Jose Angel Romero", "email": "jangel.romero@gmail.com" }
     ],
     "require": {
-        "php": "^7.1",
-        "angelrove/clone-csscolor": "dev-master"
+        "php": "^7.1"
     },
     "autoload": {
         "psr-4": {
