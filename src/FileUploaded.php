@@ -118,17 +118,19 @@ class FileUploaded
         $file['ruta']    = $file['dir'] . $file['name'];
         $file['ruta_th'] = $CONFIG_APP['url_uploads'].'/'.$file['dir'] . 'th_' . $file['name'];
         $file['ruta_completa'] = $CONFIG_APP['url_uploads'].'/'.$file['ruta'];
+        $file['url'] = $file['ruta_completa'];
 
         return $file;
     }
     //----------------------------------------------------------
     // $type: '', 'lightbox'
-    public static function getHtmlImg(array $datos,
-                                      $type = '',
-                                      $alt = '',
-                                      $class = '',
-                                      $op_nofoto = false,
-                                      $link = '')
+    public static function getHtmlImg(
+        array $datos,
+        $type = '',
+        $alt = '',
+        $class = '',
+        $op_nofoto = false,
+        $link = '')
     {
         $img = '';
 
