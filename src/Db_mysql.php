@@ -16,7 +16,8 @@ class Db_mysql
     public static function getConn($dbHost, $dbUser, $dbPassword, $database)
     {
         if (!$dbUser) {
-            trigger_error("getConn(): faltan datos", E_USER_ERROR);
+            trigger_error("getConn(): missing data", E_USER_ERROR);
+            exit();
         }
 
         // connect ----------
@@ -25,52 +26,60 @@ class Db_mysql
             trigger_error("getConn(): " . mysqli_connect_error(), E_USER_ERROR);
             exit();
         }
+
+        // select db ----------
         if (!mysqli_select_db(self::$db_dbconn, $database)) {
             trigger_error("getConn(): " . mysqli_error(self::$db_dbconn), E_USER_ERROR);
             exit();
         }
 
-        //---
+        // utf8 ---
         @mysqli_query(self::$db_dbconn, "SET NAMES 'utf8'");
         mysqli_set_charset(Db_mysql::$db_dbconn, 'utf8mb4');
 
         // scape strings ----
-        if (!get_magic_quotes_gpc()) {
-            foreach ($_REQUEST as $key => $value) {
-                if (is_array($value)) {
-                    foreach ($value as $key => $var) {
-                        if (is_array($var)) {
-                            continue;
-                        }
-
-                        $_REQUEST[$key] = self::real_escape_string($var);
-                        $_POST[$key]    = self::real_escape_string($var);
-                    }
-                } else {
-                    $_REQUEST[$key] = self::real_escape_string($value);
-                    if (isset($_POST[$key])) {
-                        $_POST[$key] = self::real_escape_string($value);
-                    } else {
-                        $_GET[$key] = self::real_escape_string($value);
-                    }
-                }
-            }
-
-            foreach ($_FILES as $key => $datos) {
-                $_FILES[$key]['name'] = self::real_escape_string($datos['name']);
-            }
-        }
+        self::parseRequest();
 
         return self::$db_dbconn;
     }
     //------------------------------------------------------------
-    public static function real_escape_string($str)
+    private static function parseRequest()
     {
-        if (is_numeric($str)) {
-            return $str;
+        // REQUEST ---
+        foreach ($_REQUEST as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $key2 => $value2) {
+                    if (is_array($value2)) {
+                        continue;
+                    }
+
+                    $_REQUEST[$key][$key2] = self::parseVarRequest($value2);
+                    $_POST   [$key][$key2] = $_REQUEST[$key][$key2];
+                }
+            } else {
+                $_REQUEST[$key] = self::parseVarRequest($value);
+
+                if (isset($_POST[$key])) {
+                    $_POST[$key] = $_REQUEST[$key];
+                } else {
+                    $_GET[$key]  = $_REQUEST[$key];
+                }
+            }
         }
 
-        return mysqli_real_escape_string(self::$db_dbconn, $str);
+        // FILES "name" ---
+        foreach ($_FILES as $key => $datos) {
+            $_FILES[$key]['name'] = self::parseVarRequest($datos['name']);
+        }
+    }
+    //------------------------------------------------------------
+    private static function parseVarRequest($value): string
+    {
+        if (!$value || is_numeric($value)) {
+            return $value;
+        }
+
+        return mysqli_real_escape_string(self::$db_dbconn, $value);
     }
     //------------------------------------------------------------
     public static function debug_sql($flag)
