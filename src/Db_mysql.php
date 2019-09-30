@@ -86,7 +86,7 @@ class Db_mysql
         //-----------
 
         if (!$query) {
-            return false;
+            return null;
         }
 
         //-----------
@@ -128,10 +128,10 @@ class Db_mysql
     //------------------------------------------------------------
     /* Obtener una tupla */
     //------------------------------------------------------------
-    public static function getRow($query, $setHtmlSpecialChars = true)
+    public static function getRow(string $query, $setHtmlSpecialChars = true): ?array
     {
         if (!$query) {
-            return false;
+            return null;
         }
 
         $result = self::query($query);
@@ -146,7 +146,7 @@ class Db_mysql
         return $row;
     }
     //------
-    public static function getRowObject($query, $setHtmlSpecialChars = true)
+    public static function getRowObject($query, $setHtmlSpecialChars = true): stdClass
     {
         $rowArr = self::getRow($query, $setHtmlSpecialChars);
         if (!$rowArr) {
@@ -163,14 +163,14 @@ class Db_mysql
     //------------------------------------------------------------
     /* Obtener un listado: array de arrays o array de objetos */
     //------------------------------------------------------------
-    public static function getList($query)
+    public static function getList($query): ?array
     {
         $listRows = array();
 
         // Query
         $result = self::query($query);
         if (!$result) {
-            return false;
+            return null;
         }
 
         // List rows
@@ -182,13 +182,13 @@ class Db_mysql
         return $listRows;
     }
     //----------
-    public static function getListObject($query, $noId = false)
+    public static function getListObject($query, $noId = false): ?array
     {
         $listRows = array();
 
         $result = self::query($query);
         if (!$result) {
-            return false;
+            return null;
         }
 
         while ($row = mysqli_fetch_object($result)) {
@@ -203,12 +203,12 @@ class Db_mysql
         return $listRows;
     }
     //----------
-    public static function getListOneField($query, $noId = false)
+    public static function getListOneField($query, $noId = false): ?array
     {
         $listRows = array();
         $result   = self::query($query);
         if (!$result) {
-            return false;
+            return null;
         }
 
         if ($noId === true) {
@@ -225,7 +225,7 @@ class Db_mysql
         return $listRows;
     }
     //------
-    public static function getListNoId($query)
+    public static function getListNoId($query): ?array
     {
         $listRows = array();
 
@@ -287,7 +287,7 @@ class Db_mysql
     }
      */
     //------
-    public static function getListObjectNoId($query)
+    public static function getListObjectNoId($query): ?array
     {
         $listRows = array();
 
@@ -300,7 +300,7 @@ class Db_mysql
         return $listRows;
     }
     //---------------------------------------------------------
-    public static function duplicate_row($table, $sql_update, $id)
+    public static function duplicate_row($table, $sql_update, $id): int
     {
         // Temporary table ---
         Db_mysql::query("CREATE TEMPORARY TABLE tmp SELECT * from $table WHERE id='$id'");
@@ -354,7 +354,7 @@ class Db_mysql
         return mysqli_insert_id(self::$db_dbconn);
     }
     //--------------
-    public static function affected_rows()
+    public static function affected_rows(): int
     {
         return mysqli_affected_rows(self::$db_dbconn);
     }
@@ -364,7 +364,7 @@ class Db_mysql
         return self::getNumRows($sqlQuery);
     }
 
-    public static function getNumRows($sqlQuery)
+    public static function getNumRows($sqlQuery): int
     {
         // Eliminar saltos de linea
         $sqlQuery2 = str_replace("\r", '', $sqlQuery);
