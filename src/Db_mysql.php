@@ -42,21 +42,22 @@ class Db_mysql
                         if (is_array($var)) {
                             continue;
                         }
-                        $_REQUEST[$key] = mysqli_real_escape_string(self::$db_dbconn, $var);
-                        $_POST[$key]    = mysqli_real_escape_string(self::$db_dbconn, $var);
+
+                        $_REQUEST[$key] = self::real_escape_string($var);
+                        $_POST[$key]    = self::real_escape_string($var);
                     }
                 } else {
-                    $_REQUEST[$key] = mysqli_real_escape_string(self::$db_dbconn, $value);
+                    $_REQUEST[$key] = self::real_escape_string($value);
                     if (isset($_POST[$key])) {
-                        $_POST[$key] = mysqli_real_escape_string(self::$db_dbconn, $value);
+                        $_POST[$key] = self::real_escape_string($value);
                     } else {
-                        $_GET[$key] = mysqli_real_escape_string(self::$db_dbconn, $value);
+                        $_GET[$key] = self::real_escape_string($value);
                     }
                 }
             }
 
             foreach ($_FILES as $key => $datos) {
-                $_FILES[$key]['name'] = mysqli_real_escape_string(self::$db_dbconn, $datos['name']);
+                $_FILES[$key]['name'] = self::real_escape_string($datos['name']);
             }
         }
 
@@ -65,6 +66,10 @@ class Db_mysql
     //------------------------------------------------------------
     public static function real_escape_string($str)
     {
+        if (is_numeric($str)) {
+            return $str;
+        }
+
         return mysqli_real_escape_string(self::$db_dbconn, $str);
     }
     //------------------------------------------------------------
