@@ -146,11 +146,11 @@ class Db_mysql
         return $row;
     }
     //------
-    public static function getRowObject($query, $setHtmlSpecialChars = true): stdClass
+    public static function getRowObject($query, $setHtmlSpecialChars = true): ?\stdClass
     {
         $rowArr = self::getRow($query, $setHtmlSpecialChars);
         if (!$rowArr) {
-            return $rowArr;
+            return null;
         }
 
         $row = new \stdClass();
