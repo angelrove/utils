@@ -13,12 +13,50 @@ class Db_mysql
     private static $DEBUG_SQL = false;
 
     //------------------------------------------------------------
-    public static function debug_sql($flag)
+    public static function debug_sql(bool $flag): void
     {
         self::$DEBUG_SQL = $flag;
     }
     //------------------------------------------------------------
-    public static function query($query)
+    public static function parseRequest(): void
+    {
+        // REQUEST ---
+        foreach ($_REQUEST as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $key2 => $value2) {
+                    if (is_array($value2)) {
+                        continue;
+                    }
+
+                    $_REQUEST[$key][$key2] = self::parseVarRequest($value2);
+                    $_POST   [$key][$key2] = $_REQUEST[$key][$key2];
+                }
+            } else {
+                $_REQUEST[$key] = self::parseVarRequest($value);
+
+                if (isset($_POST[$key])) {
+                    $_POST[$key] = $_REQUEST[$key];
+                } else {
+                    $_GET[$key]  = $_REQUEST[$key];
+                }
+            }
+        }
+
+        // FILES "name" ---
+        foreach ($_FILES as $key => $datos) {
+            $_FILES[$key]['name'] = self::parseVarRequest($datos['name']);
+        }
+    }
+    //------------------------------------------------------------
+    private static function parseVarRequest($value): string
+    {
+        if (!$value || is_numeric($value)) {
+            return $value;
+        }
+        return addslashes($value);
+    }
+    //------------------------------------------------------------
+    public static function query(string $query)
     {
         return DB::update($query);
     }
@@ -50,7 +88,7 @@ class Db_mysql
         return $row;
     }
     //------
-    public static function getRowObject(string $query, $setHtmlSpecialChars = true): ?\stdClass
+    public static function getRowObject(string $query, bool $setHtmlSpecialChars = true): ?\stdClass
     {
         $row = DB::select($query);
         $row = $row[0];
@@ -70,12 +108,12 @@ class Db_mysql
         return DB::getPdo()->lastInsertId();
     }
 
-    public static function count($sqlQuery)
+    public static function count(string $sqlQuery)
     {
         return count(DB::select($sqlQuery));
     }
 
-    public static function getTableColumns($tableName)
+    public static function getTableColumns(string $tableName): array
     {
         return DB::schema()->getColumnListing($tableName);
     }
@@ -87,6 +125,7 @@ class Db_mysql
         $listRows = [];
 
         $rows = DB::select($query);
+
         foreach ($rows as $row) {
             $listRows[$row->id] = (array)$row;
         }
