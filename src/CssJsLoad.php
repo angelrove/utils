@@ -416,13 +416,15 @@ class CssJsLoad
     //---------------------------------------------------------------------
     private static function minify_css($buffer)
     {
+        return $buffer;
+
         /* remove comments */
-        $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
+        // $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
 
         /* remove tabs, spaces, newlines, etc. */
-        $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer);
+        // $buffer = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer);
 
-        return $buffer;
+        // return $buffer;
     }
     //---------------------------------------------------------------------
     private static function minify_js($buffer)
