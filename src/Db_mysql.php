@@ -91,14 +91,7 @@ class Db_mysql
     public static function getRowObject(string $query, bool $setHtmlSpecialChars = true): ?\stdClass
     {
         $row = DB::select($query);
-        $row = $row[0];
-
-        // Por si se va a mostrar en un input y hay algo de esto: &, ", ', <, >
-        if ($row && $setHtmlSpecialChars === true) {
-            $row = array_map('htmlspecialchars', $row);
-        }
-
-        return $row;
+        return $row[0];
     }
     //---------------------------------------------------------
     /* Info */

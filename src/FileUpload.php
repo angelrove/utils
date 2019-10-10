@@ -98,7 +98,7 @@ class FileUpload
             if (!copy($f_params['tmp_name'], $ruta . '/' . $fileName)) {
                 // por si utilizo algo como extracción por url
                 $UP_ERROR['COD'] = 'CopyFileError';
-                $UP_ERROR['MSG'] = 'Error inesperado al copiar el archivo: [' . $f_params['tmp_name'] . ' >> ' . $fileName . ']';
+                $UP_ERROR['MSG'] = 'Error to copy file: [' . $f_params['tmp_name'] . ' >> ' . $fileName . ']';
                 return $UP_ERROR;
             }
         }
