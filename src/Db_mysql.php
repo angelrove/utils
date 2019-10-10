@@ -56,11 +56,6 @@ class Db_mysql
         return addslashes($value);
     }
     //------------------------------------------------------------
-    public static function query(string $query)
-    {
-        return DB::update($query);
-    }
-    //------------------------------------------------------------
     public static function getValue(string $query)
     {
         $row = self::getRow($query);
@@ -87,12 +82,6 @@ class Db_mysql
 
         return $row;
     }
-    //------
-    public static function getRowObject(string $query, bool $setHtmlSpecialChars = true): ?\stdClass
-    {
-        $row = DB::select($query);
-        return $row[0];
-    }
     //---------------------------------------------------------
     /* Info */
     //------------------------------------------------------------
@@ -104,11 +93,6 @@ class Db_mysql
     public static function count(string $sqlQuery)
     {
         return count(DB::select($sqlQuery));
-    }
-
-    public static function getTableColumns(string $tableName): array
-    {
-        return DB::schema()->getColumnListing($tableName);
     }
     //------------------------------------------------------------
     /* Obtener un listado */
@@ -132,15 +116,10 @@ class Db_mysql
 
         $rows = DB::select($query);
         foreach ($rows as $row) {
-            $listRows[$row->id] = $row;
+            @$listRows[$row->id] = $row;
         }
 
         return $listRows;
-    }
-    //----------
-    public static function getListNoId(string $query): ?array
-    {
-        return DB::select($query);
     }
     //------------------------------------------------------------
 }
