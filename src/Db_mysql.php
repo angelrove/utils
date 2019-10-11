@@ -98,16 +98,14 @@ class Db_mysql
         return $row;
     }
     //---------------------------------------------------------
-    /* Info */
+    public static function count(string $sqlQuery)
+    {
+        return count(DB::select($sqlQuery));
+    }
     //------------------------------------------------------------
     public static function insert_id()
     {
         return DB::getPdo()->lastInsertId();
-    }
-    //------------------------------------------------------------
-    public static function count(string $sqlQuery)
-    {
-        return count(DB::select($sqlQuery));
     }
     //------------------------------------------------------------
 }
