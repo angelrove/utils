@@ -56,6 +56,21 @@ class Db_mysql
         return addslashes($value);
     }
     //------------------------------------------------------------
+    // Selects
+    //------------------------------------------------------------
+    public static function getList(string $query): ?array
+    {
+        $listRows = [];
+
+        $rows = DB::select($query);
+
+        foreach ($rows as $row) {
+            $listRows[$row->id] = (array)$row;
+        }
+
+        return $listRows;
+    }
+    //------------------------------------------------------------
     public static function getValue(string $query)
     {
         $row = self::getRow($query);
@@ -89,37 +104,10 @@ class Db_mysql
     {
         return DB::getPdo()->lastInsertId();
     }
-
+    //------------------------------------------------------------
     public static function count(string $sqlQuery)
     {
         return count(DB::select($sqlQuery));
-    }
-    //------------------------------------------------------------
-    /* Obtener un listado */
-    //------------------------------------------------------------
-    public static function getList(string $query): ?array
-    {
-        $listRows = [];
-
-        $rows = DB::select($query);
-
-        foreach ($rows as $row) {
-            $listRows[$row->id] = (array)$row;
-        }
-
-        return $listRows;
-    }
-    //----------
-    public static function getListObject(string $query, bool $noId = false): ?array
-    {
-        $listRows = [];
-
-        $rows = DB::select($query);
-        foreach ($rows as $row) {
-            @$listRows[$row->id] = $row;
-        }
-
-        return $listRows;
     }
     //------------------------------------------------------------
 }
