@@ -359,7 +359,7 @@ class CssJsLoad
                 }
             } else {
                 if (is_numeric($key)) {
-                    $strScripts .= '/* ' . $key . ' */ ' . $script . PHP_EOL;
+                    $strScripts .= "/*  $key  */ \n" . $script . PHP_EOL;
                     // print_r2("script key: ".$key);
                 }
             }
