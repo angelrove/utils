@@ -33,7 +33,7 @@ class FileUpload
      *   - Un array con la descripción y tipo del error ($UP_ERROR['COD']['MSG']).
      *        COD: InputIsEmptyError, FileTypeError, FileSizeError, CopyFileError
      */
-    public static function getFile($fieldName, $saveAs, $ruta, $validTypes = '', $maxSize = 0)
+    public static function getFile($fieldName, $saveAs, $ruta, $validTypes = '', $maxSize = 0, $copyFile = false)
     {
         $UP_ERROR = array();
         $f_params = $_FILES[$fieldName];
@@ -94,13 +94,19 @@ class FileUpload
         }
 
         /** Upload **/
-        if (!move_uploaded_file($f_params['tmp_name'], $ruta . '/' . $fileName)) {
-            if (!copy($f_params['tmp_name'], $ruta . '/' . $fileName)) {
-                // por si utilizo algo como extracción por url
-                $UP_ERROR['COD'] = 'CopyFileError';
-                $UP_ERROR['MSG'] = 'Error to copy file: [' . $f_params['tmp_name'] . ' >> ' . $fileName . ']';
-                return $UP_ERROR;
-            }
+        $filePath = $ruta . '/' . $fileName;
+        dd("copyFile = $copyFile");
+        if ($copyFile === true) {
+            $ret = copy($f_params['tmp_name'], $filePath);
+        } else {
+            $ret = move_uploaded_file($f_params['tmp_name'], $filePath);
+        }
+
+        if (!$ret) {
+            // por si utilizo algo como extracción por url
+            $UP_ERROR['COD'] = 'CopyFileError';
+            $UP_ERROR['MSG'] = 'Error to copy file: [' . $f_params['tmp_name'] . ' >> ' . $fileName . ']';
+            return $UP_ERROR;
         }
 
         return true;
