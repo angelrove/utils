@@ -95,7 +95,6 @@ class FileUpload
 
         /** Upload **/
         $filePath = $ruta . '/' . $fileName;
-        dd("copyFile = $copyFile");
         if ($copyFile === true) {
             $ret = copy($f_params['tmp_name'], $filePath);
         } else {
