@@ -130,10 +130,10 @@ class UtilsBasic
      *   - Elimina la codificación UTF8.
      *   - Ejemplo de $from = 'Galletas Fontaneda <gfontaneda@gmail.com>';
      */
-    public static function sendEMail($from, $mailto, $bcc, $asunto, $body, $ReplyTo = '')
+    public static function sendEMail($from, $mailto, $bcc, $subject, $body, $ReplyTo = '')
     {
         $from   = utf8_decode($from);
-        $asunto = utf8_decode($asunto);
+        $subject = utf8_decode($subject);
         $body   = utf8_decode($body);
 
         // Headers ----------
@@ -170,7 +170,7 @@ class UtilsBasic
         if (IS_LOCALHOST) {
             echo "
          UtilsBasic::sendEMail() >> mail() >> IS_LOCALHOST<hr>
-         Asunto: '$asunto'<br>
+         Asunto: '$subject'<br>
          Para: '$mailto'<br>
          <hr><br>
          $body
@@ -178,7 +178,7 @@ class UtilsBasic
             exit;
         }
 
-        mail($mailto, $asunto, $body, $header);
+        mail($mailto, $subject, $body, $header);
     }
     //------------------------------------------------------------------
     /*
