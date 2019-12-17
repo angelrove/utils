@@ -132,9 +132,9 @@ class UtilsBasic
      */
     public static function sendEMail($from, $mailto, $bcc, $subject, $body, $ReplyTo = '')
     {
-        $from   = utf8_decode($from);
+        $from    = utf8_decode($from);
         $subject = utf8_decode($subject);
-        $body   = utf8_decode($body);
+        $body    = utf8_decode($body);
 
         // Headers ----------
         $header = "From: $from\n";
