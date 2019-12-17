@@ -13,44 +13,57 @@ use GuzzleHttp\Psr7\Request;
 class UtilsBasic
 {
     //------------------------------------------------------------------
+    public static function randomPassword()
+    {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+
+        return implode($pass); //turn the array into a string
+    }
+    //------------------------------------------------------------------
     public static function strDateChromeToTime($strDate)
     {
-       $time = false;
+        $time = false;
 
-       // 2018-01-01T22:02 -------
-       if ($date = \DateTime::createFromFormat('Y-m-d\TH:i', $strDate)) {
-       }
-       // 2018-01-01T22:02:00 -------
-       elseif ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $strDate)) {
-       }
+        // 2018-01-01T22:02 -------
+        if ($date = \DateTime::createFromFormat('Y-m-d\TH:i', $strDate)) {
+        }
+        // 2018-01-01T22:02:00 -------
+        elseif ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $strDate)) {
+        }
 
-       if ($date) {
-           $time = strftime("%Y-%m-%d %H:%M", $date->getTimestamp());
-       } else {
-           throw new \Exception("strDateChromeToTime(): Error processing date!! [$strDate]");
-       }
+        if ($date) {
+            $time = strftime("%Y-%m-%d %H:%M", $date->getTimestamp());
+        } else {
+            throw new \Exception("strDateChromeToTime(): Error processing date!! [$strDate]");
+        }
 
-       return $time;
+        return $time;
     }
     //------------------------------------------------------------------
     public static function strDateChromeToTimestamp($strDate)
     {
-       $time = false;
+        $time = false;
 
        // 2018-01-01T22:02 -------
-       if ($date = \DateTime::createFromFormat('Y-m-d\TH:i', $strDate)) {
-       }
+        if ($date = \DateTime::createFromFormat('Y-m-d\TH:i', $strDate)) {
+        }
        // 2018-01-01T22:02:00 -------
-       elseif ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $strDate)) {
-       }
+        elseif ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $strDate)) {
+        }
 
-       if ($date) {
-           $time = $date->getTimestamp();
-       } else {
-           throw new \Exception("strDateChromeToTimestamp(): Error processing date!! [$strDate]");
-       }
+        if ($date) {
+            $time = $date->getTimestamp();
+        } else {
+            throw new \Exception("strDateChromeToTimestamp(): Error processing date!! [$strDate]");
+        }
 
-       return $time;
+        return $time;
     }
     //------------------------------------------------------------------
     public static function fileExtFromUrl($url)
@@ -83,7 +96,6 @@ class UtilsBasic
             'other'     => $subdomain,
             'subdomain' => $subdomains,
         );
-
     }
     //------------------------------------------------------------------
     // Arrays
@@ -184,12 +196,13 @@ class UtilsBasic
     /*
      * Obtener un CSV a partir de un array
      */
-    public static function get_csv(array $listFields,
-                                   array $listRows,
-                                   $SEP,
-                                   $isDebug = false,
-                                   $fileName = 'export.csv')
-    {
+    public static function get_csv(
+        array $listFields,
+        array $listRows,
+        $SEP,
+        $isDebug = false,
+        $fileName = 'export.csv'
+    ) {
         $LINE_RET = ($isDebug) ? '<br>' : "\n";
 
         //--------------
@@ -231,13 +244,14 @@ class UtilsBasic
         }
     }
     //------------------------------------------------------------------
-    public static function get_imageFromUrl($url_image,
-                                            $path_uploads,
-                                            $dir_upload,
-                                            $name_file,
-                                            $max_with=false,
-                                            $def_ext='')
-    {
+    public static function get_imageFromUrl(
+        $url_image,
+        $path_uploads,
+        $dir_upload,
+        $name_file,
+        $max_with = false,
+        $def_ext = ''
+    ) {
         // Image name ---
         $ext = pathinfo($url_image, PATHINFO_EXTENSION);
         list($ext) = explode('?', $ext);
