@@ -71,16 +71,17 @@ class CallApiCurl
                 }
         }
 
-        // Custom headers:
-        if ($headers) {
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        }
-
         // Optional Authentication:
         // curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         // curl_setopt($curl, CURLOPT_USERPWD, "username:password");
 
         curl_setopt($curl, CURLOPT_URL, $url);
+
+        // Custom headers
+        if ($headers) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        }
+
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 2);
