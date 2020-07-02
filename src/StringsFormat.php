@@ -24,6 +24,11 @@ class StringsFormat
         return $res;
     }
     //------------------------------------------------------------------
+    public static function slugify($string)
+    {
+        return self::str_clean($string);
+    }
+    //------------------------------------------------------------------
     public static function str_clean($string)
     {
         $string = trim($string);
