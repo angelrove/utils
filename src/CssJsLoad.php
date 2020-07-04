@@ -7,8 +7,6 @@
 
 namespace angelrove\utils;
 
-use angelrove\utils\FileContent;
-
 class CssJsLoad
 {
     private static $async = array(
@@ -318,12 +316,7 @@ class CssJsLoad
         $c           = 0;
         foreach ($listFiles as $file) {
             // Read file ---
-            try {
-                $strFile = FileContent::include_return($file);
-            } catch (\Exception $e) {
-                trigger_error("File not found: $file", E_USER_NOTICE);
-                continue;
-            }
+            $strFile = file_get_contents($file);
 
             // Minify ---
             if (self::$set_minify) {
