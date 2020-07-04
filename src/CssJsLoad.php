@@ -29,8 +29,6 @@ class CssJsLoad
     private static $list_css_http   = array();
     private static $list_css_blocks = array();
 
-    private static $list_less = array();
-
     private static $list_js      = array();
     private static $list_scripts = array();
 
@@ -124,14 +122,6 @@ class CssJsLoad
         }
     }
     //---------------------------------------------------------------------
-    public static function set_less($file, $async = false)
-    {
-        // self::check_get_calls();
-
-        self::$async_files[$file] = $async;
-        self::$list_less[$file]   = $file;
-    }
-    //---------------------------------------------------------------------
     // Dependiendo de si usa o no clave, sera combined o no
     public static function set_script($script, $key = '')
     {
@@ -182,7 +172,6 @@ class CssJsLoad
         self::get_css_js_files(self::$list_css_http, 'css');
         self::get_css_js_combined('css');
         self::get_css_js_files(self::$list_css, 'css');
-        self::get_css_js_files(self::$list_less, 'less');
     }
     //---------------------------------------------------------------------
     public static function get_js()
@@ -221,8 +210,6 @@ class CssJsLoad
                 $strCssJs .= '<script ' . $strAsync . ' type="text/javascript" src="' . $file . '"></script>' . PHP_EOL;
             } elseif ($ext == 'css') {
                 $strCssJs .= '<link type="text/css" ' . $strAsync . ' href="' . $file . '" rel="stylesheet">' . PHP_EOL;
-            } elseif ($ext == 'less') {
-                $strCssJs .= '<link type="text/css" ' . $strAsync . ' href="' . $file . '" rel="stylesheet/less">' . PHP_EOL;
             }
         }
 
@@ -288,8 +275,6 @@ class CssJsLoad
             echo '<script type="text/javascript" src="' . $cache_file_url . '"></script>' . PHP_EOL;
         } elseif ($ext == 'css') {
             echo '<link type="text/css" href="' . $cache_file_url . '" rel="stylesheet">' . PHP_EOL;
-        } elseif ($ext == 'less') {
-            echo '<link type="text/css" href="' . $cache_file_url . '" rel="stylesheet/less">' . PHP_EOL;
         }
     }
     //---------------------------------------------------------------------
@@ -391,8 +376,6 @@ class CssJsLoad
 
         if ($end_3 == '.js' || strpos($file, 'js?')) {
             return 'js';
-        } elseif ($end_3 == 'ess') {
-            return 'less';
         } else {
             return 'css';
         }
