@@ -5,7 +5,7 @@
  *
  */
 
-namespace angelrove\utils\webcrawler;
+namespace angelrove\utils\WebCrawler;
 
 class WebCrawlerContent
 {
