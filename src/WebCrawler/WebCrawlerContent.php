@@ -10,7 +10,6 @@ namespace angelrove\utils\WebCrawler;
 class WebCrawlerContent
 {
     private $url;
-    private $flagType;
     private $dom;
 
     //-------------------------------------------------------
@@ -52,6 +51,42 @@ class WebCrawlerContent
 
             return $content;
         }
+    }
+    //-------------------------------------------------------
+    // $flagType: false, xml
+    public function getElements($tag, $attribute, $attr_value, array $getAttrs = [], $flagType = false)
+    {
+        $ret = array();
+
+        $elements = $this->dom->getElementsByTagName($tag);
+
+        foreach ($elements as $element) {
+            $value = $element->getAttribute($attribute);
+            if ($value && ($value == $attr_value)) {
+            } else {
+                continue;
+            }
+
+            // content attr ---
+            if (count($getAttrs) > 0) {
+                $content = array();
+                foreach ($getAttrs as $attr) {
+                    $content[$attr] = $element->getAttribute($attr);
+                }
+            }
+            // content ---
+            else {
+                if ($flagType == 'xml') {
+                    $content = $this->dom->saveXML($element);
+                } else {
+                    $content = $element->nodeValue;
+                }
+            }
+
+            $ret[] = $content;
+        }
+
+        return $ret;
     }
     //-------------------------------------------------------
 }
