@@ -109,6 +109,15 @@ class ImageTransform
         // DebugTrace::out($trazas_obj, $traza);
     }
     //----------------------------------------------------------------
+    public static function imageCropJs($id, $img, $crop)
+    {
+       CssJsLoad::set_script('
+         drawImageCrop("canvas_'.$id.'", "'.$img.'", '.$crop[0].', '.$crop[1].', '.$crop[2].', '.$crop[3].');
+       ');
+
+       return '<canvas class="imageCrop" id="canvas_'.$id.'" width="'.$crop[2].'" height="'.$crop[3].'">';
+    }
+    //----------------------------------------------------------------
     /*
      * Recortar una imagen
      *  $outputBuffer: volcar en pantalla o modificar el propio archivo
