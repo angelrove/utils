@@ -30,6 +30,9 @@ class FileSystem
                 echo "=> $delFile <br>";
             } else {
                 unlink($delFile);
+                // if(!@unlink($delFile)) {
+                //    return "no se pudo eliminar el archivo: [$delFile]";
+                // }
             }
         }
 
