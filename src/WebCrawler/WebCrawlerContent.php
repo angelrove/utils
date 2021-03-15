@@ -15,6 +15,10 @@ class WebCrawlerContent
     //-------------------------------------------------------
     public function __construct($url)
     {
+        if (!$url) {
+            throw new \Exception("Error: Empty url", 1);
+        }
+
         $this->url = $url;
 
         // Load HTML ----
