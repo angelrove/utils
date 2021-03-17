@@ -112,7 +112,9 @@ class ImageTransform
     //----------------------------------------------------------------
     public static function imageCropJs($id, $img, $crop)
     {
-       CssJsLoad::set_script('
+        CssJsLoad::set(__DIR__.'/ImageTransform.js');
+
+        CssJsLoad::set_script('
          drawImageCrop("canvas_'.$id.'", "'.$img.'", '.$crop[0].', '.$crop[1].', '.$crop[2].', '.$crop[3].');
        ');
 
