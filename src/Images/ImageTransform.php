@@ -8,6 +8,7 @@
 namespace angelrove\utils\Images;
 
 use angelrove\utils\FileSystem;
+use angelrove\utils\CssJsLoad;
 // use angelrove\membrillo\DebugTrace;
 
 class ImageTransform
