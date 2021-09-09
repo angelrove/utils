@@ -7,9 +7,6 @@
 
 namespace angelrove\utils;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-
 class UtilsBasic
 {
     //------------------------------------------------------------------
@@ -293,7 +290,7 @@ class UtilsBasic
      * Llamar antes de cargar cualquier vista para así minimizar el riesgo de
      * cachear errores(ya que al volcarse un warning no se enviarían los headers)
      */
-    function cache_headers_enable($min, $hours=0, $days=0)
+    public static function cache_headers_enable($min, $hours=0, $days=0)
     {
       if($days)  $days  = 60 * 60 * 24 * $days;
       if($hours) $hours = 60 * 60 * $hours;
