@@ -4,12 +4,14 @@
  * jangel.romero@gmail.com
  */
 
+namespace angelrove\utils;
+
 class DbMysqli
 {
   //------------------------------------------------------------
   /* Conexión */
   //------------------------------------------------------------
-  function db_getConn($dbHost, $dbUser, $dbPassword, $database) {
+  public static function db_getConn($dbHost, $dbUser, $dbPassword, $database) {
     if(!$dbUser) {
        trigger_error("db_getConn(): faltan datos", E_USER_ERROR);
     }
@@ -41,11 +43,11 @@ class DbMysqli
   //------------------------------------------------------------
   /* Consulta */
   //------------------------------------------------------------
-  function db_query($query) {
+  public static function db_query($query) {
     global $db_dbconn, $CONFIG_APP;
 
     // DEBUG ----
-    if($CONFIG_APP['debug']['SQL']) print_r2('DEBUG_SQL: '.$query);
+    if($CONFIG_APP['debug']['SQL']) print_r('DEBUG_SQL: '.$query);
     //-----------
 
     //-----------
@@ -62,8 +64,8 @@ class DbMysqli
   //------------------------------------------------------------
   /* Obtener un valor */
   //------------------------------------------------------------
-  function db_getValue($query) {
-    $result = db_query($query);
+  public static function db_getValue($query) {
+    $result = self::db_query($query);
     if(!$result) return;
     if(!mysqli_num_rows($result)) return;
 
@@ -75,8 +77,8 @@ class DbMysqli
   //------------------------------------------------------------
   /* Obtener una tupla */
   //------------------------------------------------------------
-  function db_getRow($query, $setHtmlSpecialChars=true) {
-    $result = db_query($query);
+  public static function db_getRow($query, $setHtmlSpecialChars=true) {
+    $result = self::db_query($query);
     $row = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
 
@@ -88,8 +90,8 @@ class DbMysqli
     return $row;
   }
   //------
-  function db_getRowObject($query, $setHtmlSpecialChars=true) {
-    $rowArr = db_getRow($query, $setHtmlSpecialChars);
+  public static function db_getRowObject($query, $setHtmlSpecialChars=true) {
+    $rowArr = self::db_getRow($query, $setHtmlSpecialChars);
     if(!$rowArr) return $rowArr;
 
     foreach($rowArr as $field => $value) {
@@ -101,10 +103,10 @@ class DbMysqli
   //------------------------------------------------------------
   /* Obtener un listado: array de arrays o array de objetos */
   //------------------------------------------------------------
-  function db_getList($query) {
+  public static function db_getList($query) {
     $listRows = array();
 
-    $result = db_query($query);
+    $result = self::db_query($query);
     if(!$result) {
        return false;
     }
@@ -116,9 +118,9 @@ class DbMysqli
 
     return $listRows;
   }
-  function db_getListOneField($query, $noId=false) {
+  public static function db_getListOneField($query, $noId=false) {
     $listRows = array();
-    $result = db_query($query);
+    $result = self::db_query($query);
     if(!$result) {
        return false;
     }
@@ -138,10 +140,10 @@ class DbMysqli
     return $listRows;
   }
   //------
-  function db_getListNoId($query) {
+  public static function db_getListNoId($query) {
     $listRows = array();
 
-    $result = db_query($query);
+    $result = self::db_query($query);
     if($result === true) {
        return $listRows;
     }
@@ -154,10 +156,10 @@ class DbMysqli
     return $listRows;
   }
   //----------
-  function db_getListObject($query) {
+  public static function db_getListObject($query) {
     $listRows = array();
 
-    $result = db_query($query);
+    $result = self::db_query($query);
     while($row = mysqli_fetch_object($result)) {
        $listRows[$row->id] = $row;
     }
@@ -167,11 +169,11 @@ class DbMysqli
   }
   //------
   /*
-  function db_getListRango($query, $inicio, $numRows, $asObject=true) {
+  public static function db_getListRango($query, $inicio, $numRows, $asObject=true) {
     $listRows = array();
 
     // Query
-    $result = db_query($query);
+    $result = self::db_query($query);
 
     // Num total results
     $DB_TOTAL_ROWS = mysqli_num_rows($result);
@@ -211,10 +213,10 @@ class DbMysqli
   }
   */
   //------
-  function db_getListObjectNoId($query) {
+  public static function db_getListObjectNoId($query) {
     $listRows = array();
 
-    $result = db_query($query);
+    $result = self::db_query($query);
     while($row = mysqli_fetch_object($result)) {
        $listRows[] = $row;
     }
@@ -225,17 +227,17 @@ class DbMysqli
   //------------------------------------------------------------
   /* Info */
   //------------------------------------------------------------
-  function db_insert_id() {
+  public static function db_insert_id() {
     global $db_dbconn;
     return mysqli_insert_id($db_dbconn);
   }
   //--------------
-  function db_affected_rows() {
+  public static function db_affected_rows() {
     global $db_dbconn;
     return mysqli_affected_rows($db_dbconn);
   }
   //--------------
-  function db_getNumRows($sqlQuery) {
+  public static function db_getNumRows($sqlQuery) {
     // Eliminar saltos de linea
     $sqlQuery2 = str_replace("\r", '',    $sqlQuery);
     $sqlQuery2 = str_replace("\n", '[#]', $sqlQuery2);
@@ -261,8 +263,8 @@ class DbMysqli
     $sqlQuery2 = "SELECT COUNT(id) AS numRows FROM ($sqlQuery2) table_numRows";
 
     // Query
-    //print_r2($sqlQuery); echo "//-----------"; print_r2($sqlQuery2);
-    $numRows = db_getValue($sqlQuery2);
+    //print_r($sqlQuery); echo "//-----------"; print_r($sqlQuery2);
+    $numRows = self::db_getValue($sqlQuery2);
 
     return $numRows;
   }
