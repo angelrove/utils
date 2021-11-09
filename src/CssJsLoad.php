@@ -18,7 +18,7 @@ class CssJsLoad
     private static $url_cache  = '';
 
     //---
-    private static $set_minify     = true;
+    private static $set_minify     = false;
     private static $cache_disabled = false;
     private static $cache_version  = '1';
 
@@ -41,12 +41,16 @@ class CssJsLoad
     //---------------------------------------------------------------------
     // CONF
     //---------------------------------------------------------------------
-    public static function __init($path_cache, $url_cache, $minify, $cache_version)
+    public static function __init($path_cache, $url_cache, $cache_version)
     {
         self::$path_cache = $path_cache;
         self::$url_cache  = $url_cache;
-        self::$set_minify = $minify;
         self::$cache_version = $cache_version;
+    }
+    //---------------------------------------------------------------------
+    public static function set_minify($minify)
+    {
+        self::$set_minify = $minify;
     }
     //---------------------------------------------------------------------
     public static function set_cache_disabled($flag)
