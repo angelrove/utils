@@ -39,6 +39,7 @@ class FileSystem
             }
         }
 
+        return $listDeletes;
     }
     //--------------------------------------------------------------------
     /* Renombrar archivos */
