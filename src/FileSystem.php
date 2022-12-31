@@ -13,6 +13,7 @@ class FileSystem
     public static function deleteFiles($ruta, $testing, $cadena = '')
     {
         $listFiles = self::getFiles($ruta, false);
+        $listDeletes = [];
 
         foreach ($listFiles as $file) {
             $delFile = $file['ruta'] . $file['name'];
@@ -30,6 +31,8 @@ class FileSystem
                 echo "=> $delFile <br>";
             } else {
                 unlink($delFile);
+                $listDeletes[] = $delFile;
+
                 // if(!@unlink($delFile)) {
                 //    return "no se pudo eliminar el archivo: [$delFile]";
                 // }
